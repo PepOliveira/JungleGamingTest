@@ -1,0 +1,12 @@
+node_modules
+dist
+*.local
+.env
+.env.*
+!.env.example
+playwright-report
+test-results
+.lighthouseci
+.vercel
+.DS_Store
+*.tsbuildinfo

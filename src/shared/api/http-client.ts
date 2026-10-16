@@ -1,0 +1,45 @@
+import axios from 'axios'
+import { env } from '@/shared/config/env'
+import type { ApiError } from './api-error'
+import { toApiError } from './api-error'
+import { serializeParams } from './serialize-params'
+
+type HttpClientHooks = {
+  getAccessToken: () => string | null
+  onUnauthorized: ((error: ApiError) => void) | null
+}
+
+const hooks: HttpClientHooks = {
+  getAccessToken: () => null,
+  onUnauthorized: null,
+}
+
+export function configureHttpClient(next: Partial<HttpClientHooks>) {
+  Object.assign(hooks, next)
+}
+
+export const httpClient = axios.create({
+  baseURL: env.VITE_API_BASE_URL,
+  timeout: env.VITE_REQUEST_TIMEOUT_MS,
+  headers: { Accept: 'application/json' },
+  paramsSerializer: { serialize: (params) => serializeParams(params) },
+})
+
+httpClient.interceptors.request.use((config) => {
+  const token = hooks.getAccessToken()
+  if (token) {
+    config.headers.set('Authorization', `Bearer ${token}`)
+  }
+  return config
+})
+
+httpClient.interceptors.response.use(
+  (response) => response,
+  (error: unknown) => {
+    const apiError = toApiError(error)
+    if (apiError.kind === 'unauthorized') {
+      hooks.onUnauthorized?.(apiError)
+    }
+    return Promise.reject(apiError)
+  },
+)

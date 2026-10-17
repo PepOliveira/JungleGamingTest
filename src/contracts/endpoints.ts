@@ -13,6 +13,7 @@ export const endpoints = {
     list: '/nfts',
     featured: '/nfts/featured',
     detail: (id: string) => `/nfts/${segment(id)}`,
+    related: (id: string) => `/nfts/${segment(id)}/related`,
   },
   favorites: {
     list: '/favorites',

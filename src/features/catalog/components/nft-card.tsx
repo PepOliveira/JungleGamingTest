@@ -1,21 +1,23 @@
 import { Link } from '@tanstack/react-router'
 import type { NftSummary } from '@/contracts/nft'
 import { formatEthWithSymbol } from '@/shared/lib/eth'
+import { cn } from '@/shared/lib/utils'
 import { Skeleton } from '@/shared/ui/skeleton'
 import { ResponsiveImage } from '@/shared/ui/responsive-image'
 
 type NftCardProps = {
   nft: NftSummary
   priority?: boolean
+  className?: string
 }
 
 const IMAGE_SIZES = '(min-width: 1024px) 260px, (min-width: 768px) 30vw, 46vw'
 
-export function NftCard({ nft, priority = false }: NftCardProps) {
+export function NftCard({ nft, priority = false, className }: NftCardProps) {
   const soldOut = nft.available === 0
 
   return (
-    <li className="flex flex-col">
+    <li className={cn('flex flex-col', className)}>
       <Link
         to="/nfts/$nftId"
         params={{ nftId: nft.id }}
@@ -58,9 +60,9 @@ export function NftCard({ nft, priority = false }: NftCardProps) {
   )
 }
 
-export function NftCardSkeleton() {
+export function NftCardSkeleton({ className }: { className?: string }) {
   return (
-    <li className="flex flex-col gap-3" aria-hidden="true">
+    <li className={cn('flex flex-col gap-3', className)} aria-hidden="true">
       <div className="rounded-xl bg-card p-3">
         <Skeleton className="aspect-square rounded-lg bg-secondary" />
       </div>

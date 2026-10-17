@@ -37,7 +37,9 @@ httpClient.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
     const apiError = toApiError(error)
-    if (apiError.kind === 'unauthorized') {
+    const hadSession =
+      axios.isAxiosError(error) && Boolean(error.config?.headers?.has('Authorization'))
+    if (apiError.kind === 'unauthorized' && hadSession) {
       hooks.onUnauthorized?.(apiError)
     }
     return Promise.reject(apiError)

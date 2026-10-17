@@ -3,6 +3,7 @@ import { z } from 'zod'
 export const apiErrorCodeSchema = z.enum([
   'validation_error',
   'unauthorized',
+  'invalid_credentials',
   'session_expired',
   'forbidden',
   'not_found',

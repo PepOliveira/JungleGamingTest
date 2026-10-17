@@ -1,15 +1,15 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { LogIn, ShoppingCart } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { primaryNavigation } from '@/shared/config/navigation'
 import { cn } from '@/shared/lib/utils'
-import { Button } from '@/shared/ui/button'
 import { Logo } from './logo'
 import { UnavailableLink } from './unavailable-link'
 
 type SiteHeaderProps = {
   cartCount: number
   searchSlot: ReactNode
+  accountSlot: ReactNode
 }
 
 const navLinkClass =
@@ -17,7 +17,7 @@ const navLinkClass =
 
 const navLinkActiveClass = 'border-primary text-primary'
 
-export function SiteHeader({ cartCount, searchSlot }: SiteHeaderProps) {
+export function SiteHeader({ cartCount, searchSlot, accountSlot }: SiteHeaderProps) {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const onMarketPage = pathname.startsWith('/nfts/')
 
@@ -63,12 +63,7 @@ export function SiteHeader({ cartCount, searchSlot }: SiteHeaderProps) {
               {cartCount}
             </span>
           </UnavailableLink>
-          <Button asChild size="lg" className="gap-2 text-base font-medium">
-            <UnavailableLink secao="entrar">
-              <LogIn aria-hidden="true" />
-              Entrar
-            </UnavailableLink>
-          </Button>
+          {accountSlot}
         </div>
       </div>
     </header>

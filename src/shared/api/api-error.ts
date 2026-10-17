@@ -70,6 +70,7 @@ function kindFromCode(code: ApiErrorCode): ApiErrorKind | null {
     case 'coupon_expired':
       return 'validation'
     case 'unauthorized':
+    case 'invalid_credentials':
     case 'session_expired':
       return 'unauthorized'
     case 'forbidden':

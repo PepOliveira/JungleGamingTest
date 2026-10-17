@@ -1,14 +1,18 @@
 import { Outlet, useRouterState } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
+import { LiveRegion } from '@/shared/ui/live-region'
 import { MobileTabBar } from './mobile-tab-bar'
 import { SiteFooter } from './site-footer'
 import { SiteHeader } from './site-header'
 
 type AppShellProps = {
   headerSearch: ReactNode
+  headerAccount: ReactNode
+  mobileProfile: ReactNode
+  overlays: ReactNode
 }
 
-export function AppShell({ headerSearch }: AppShellProps) {
+export function AppShell({ headerSearch, headerAccount, mobileProfile, overlays }: AppShellProps) {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const hideTabBar = pathname.startsWith('/nfts/')
 
@@ -20,12 +24,14 @@ export function AppShell({ headerSearch }: AppShellProps) {
       >
         Pular para o conteúdo
       </a>
-      <SiteHeader cartCount={0} searchSlot={headerSearch} />
+      <SiteHeader cartCount={0} searchSlot={headerSearch} accountSlot={headerAccount} />
       <main id="conteudo" tabIndex={-1} className="flex-1 outline-none">
         <Outlet />
       </main>
       <SiteFooter />
-      {hideTabBar ? null : <MobileTabBar />}
+      {hideTabBar ? null : <MobileTabBar profileSlot={mobileProfile} />}
+      {overlays}
+      <LiveRegion />
     </div>
   )
 }

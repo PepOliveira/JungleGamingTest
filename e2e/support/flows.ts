@@ -9,7 +9,7 @@ export async function addToCart(page: Page, nftId: string, quantity = 1) {
   }
   await page.getByRole('button', { name: /^Comprar( NFT)?$/ }).click()
   await page.waitForURL('**/carrinho')
-  await expect(page.getByRole('link', { name: 'Conectar e finalizar' })).toBeVisible()
+  await expect(page.getByRole('region', { name: 'Itens do carrinho' })).toBeVisible()
 }
 
 export async function goToCheckout(page: Page) {

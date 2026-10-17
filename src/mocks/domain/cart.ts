@@ -32,7 +32,11 @@ export function evaluateCoupon(
 
 type Priced = Pick<CartItem, 'unitPrice' | 'quantity'>
 
-export function computeSummary(items: readonly Priced[], coupon: CouponRecord | null): CartSummary {
+export function computeSummary(
+  items: readonly Priced[],
+  coupon: CouponRecord | null,
+  networkFee: EthAmount = NETWORK_FEE_ESTIMATE,
+): CartSummary {
   if (items.length === 0) {
     return { subtotal: '0', discount: '0', networkFee: '0', total: '0' }
   }
@@ -48,8 +52,8 @@ export function computeSummary(items: readonly Priced[], coupon: CouponRecord | 
   return {
     subtotal,
     discount,
-    networkFee: NETWORK_FEE_ESTIMATE,
-    total: ethAdd(ethSub(subtotal, discount), NETWORK_FEE_ESTIMATE),
+    networkFee,
+    total: ethAdd(ethSub(subtotal, discount), networkFee),
   }
 }
 

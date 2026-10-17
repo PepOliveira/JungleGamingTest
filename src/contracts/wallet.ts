@@ -97,3 +97,19 @@ export const walletsResponseSchema = z.object({
   items: z.array(walletSchema),
 })
 export type WalletsResponse = z.infer<typeof walletsResponseSchema>
+
+export const walletConnectionSchema = z.object({
+  id: idSchema,
+  walletId: idSchema,
+  provider: walletProviderSchema,
+  network: networkSchema,
+  address: z.string().min(1),
+  connectedAt: z.iso.datetime({ offset: true }),
+})
+export type WalletConnection = z.infer<typeof walletConnectionSchema>
+
+export const createWalletConnectionRequestSchema = z.object({
+  walletId: idSchema,
+  provider: walletProviderSchema,
+})
+export type CreateWalletConnectionRequest = z.infer<typeof createWalletConnectionRequestSchema>

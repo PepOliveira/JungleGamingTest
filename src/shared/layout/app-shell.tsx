@@ -21,7 +21,11 @@ export function AppShell({
   overlays,
 }: AppShellProps) {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
-  const hideTabBar = pathname.startsWith('/nfts/') || pathname === '/carrinho'
+  const hideTabBar =
+    pathname.startsWith('/nfts/') ||
+    pathname === '/carrinho' ||
+    pathname === '/pagamento' ||
+    pathname.startsWith('/pedido/')
 
   return (
     <div className="flex min-h-dvh flex-col">

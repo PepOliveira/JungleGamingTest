@@ -74,6 +74,7 @@ function kindFromCode(code: ApiErrorCode): ApiErrorKind | null {
     case 'session_expired':
       return 'unauthorized'
     case 'forbidden':
+    case 'wallet_connection_refused':
       return 'forbidden'
     case 'not_found':
       return 'not_found'

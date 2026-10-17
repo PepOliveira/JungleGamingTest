@@ -85,4 +85,26 @@ test.describe('sessão e isolamento entre usuários', () => {
     await expect(page).toHaveURL(/\/perfil\/carteiras$/)
     await expect(page.getByRole('heading', { name: /Carteira principal/i })).toBeVisible()
   })
+
+  test('o reset dos mocks restaura o cenário conhecido', async ({ page, mocks, login }) => {
+    await login()
+    await addToCart(page, 'nft_001')
+    await page.goto('/carrinho')
+    await expect(page.getByRole('region', { name: 'Itens do carrinho' })).toBeVisible()
+
+    await mocks.reset()
+    await page.evaluate(() => localStorage.removeItem('kurio:session'))
+    await page.reload()
+    await login()
+
+    await page.goto('/carrinho')
+    await expect(page.getByRole('region', { name: 'Itens do carrinho' })).toHaveCount(0)
+    await page.goto('/')
+    await expect(
+      page
+        .getByRole('region', { name: 'Catálogo de NFTs' })
+        .getByRole('button', { name: /dos favoritos$/ })
+        .first(),
+    ).toBeVisible()
+  })
 })

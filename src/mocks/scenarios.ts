@@ -2,7 +2,13 @@ import { env } from '@/shared/config/env'
 import { createRng } from './utils/rng'
 import type { Rng } from './utils/rng'
 
-export const scenarioNames = ['default', 'instant', 'payment-declined', 'wallet-refused'] as const
+export const scenarioNames = [
+  'default',
+  'instant',
+  'slow',
+  'payment-declined',
+  'wallet-refused',
+] as const
 export type ScenarioName = (typeof scenarioNames)[number]
 
 export type Scenario = {
@@ -30,6 +36,13 @@ const scenarios: Record<ScenarioName, Scenario> = {
     seed,
     latency: noLatency,
     payment: { settleMs: 0, outcome: 'confirmed' },
+    walletConnection: 'accept',
+  },
+  slow: {
+    name: 'slow',
+    seed,
+    latency: { minMs: 1800, maxMs: 2600 },
+    payment: { settleMs: 2500, outcome: 'confirmed' },
     walletConnection: 'accept',
   },
   'payment-declined': {

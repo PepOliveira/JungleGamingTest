@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
 import { IDEMPOTENCY_HEADER, endpoints } from '@/contracts/endpoints'
 import { createOrderRequestSchema, orderListQuerySchema } from '@/contracts/order'
 import { apiUrl } from '../config'
@@ -6,6 +6,7 @@ import { getDb, updateDb } from '../db/store'
 import { createOrderRecord, orderFingerprint, toOrder } from '../domain/orders'
 import { buildQuote } from '../domain/quote'
 import { scheduleSettlement, settleDueOrders } from '../realtime/settlement'
+import { consumeLostOrderResponse } from '../faults'
 import { getScenario } from '../scenarios'
 import { authenticate } from '../utils/auth'
 import { errorResponse } from '../utils/errors'
@@ -128,6 +129,10 @@ export const orderHandlers = [
     })
 
     scheduleSettlement(order.id)
+
+    if (consumeLostOrderResponse()) {
+      await delay('infinite')
+    }
 
     return HttpResponse.json(toOrder(order), { status: 201 })
   }),

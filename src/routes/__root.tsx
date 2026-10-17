@@ -1,6 +1,6 @@
 import { createRootRouteWithContext } from '@tanstack/react-router'
 import type { RouterContext } from '@/app/router-context'
-import { AuthDialog } from '@/features/auth/components/auth-dialog'
+import { LazyAuthDialog } from '@/features/auth/components/lazy-auth-dialog'
 import { HeaderAccount } from '@/features/auth/components/header-account'
 import { MobileProfileTab } from '@/features/auth/components/mobile-profile-tab'
 import { authSearchSchema } from '@/features/auth/search'
@@ -30,7 +30,7 @@ function RootLayout() {
       headerSearch={<SearchDialog />}
       headerAccount={<HeaderAccount />}
       mobileProfile={<MobileProfileTab />}
-      overlays={<AuthDialog />}
+      overlays={<LazyAuthDialog />}
     />
   )
 }

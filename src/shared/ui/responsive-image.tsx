@@ -6,6 +6,7 @@ type ResponsiveImageProps = {
   image: Image
   sizes: string
   priority?: boolean
+  maxWidth?: number
   className?: string
 }
 
@@ -13,12 +14,13 @@ export function ResponsiveImage({
   image,
   sizes,
   priority = false,
+  maxWidth,
   className,
 }: ResponsiveImageProps) {
   return (
     <img
       src={image.url}
-      srcSet={imageSrcSet(image.url)}
+      srcSet={imageSrcSet(image.url, maxWidth)}
       sizes={sizes}
       alt={image.alt}
       width={640}

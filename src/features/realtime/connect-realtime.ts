@@ -1,6 +1,7 @@
 import type { QueryClient } from '@tanstack/react-query'
 import type { Socket } from 'socket.io-client'
 import { realtimeEventNames } from '@/contracts/realtime'
+import { whenRuntimeReady } from '@/shared/config/runtime-ready'
 import { announce } from '@/shared/lib/announcer'
 import { handleNftPayload, handleOrderPayload, reconcileAfterReconnect } from './apply-events'
 import { createEventLedger } from './event-ledger'
@@ -23,6 +24,8 @@ export function connectRealtime({ queryClient, url, getToken, getUserId }: Conne
   let cancelled = false
 
   async function start() {
+    await whenRuntimeReady()
+    if (cancelled) return
     const { io } = await import('socket.io-client')
     if (cancelled) return
 

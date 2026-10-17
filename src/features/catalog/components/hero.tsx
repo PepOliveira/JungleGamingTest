@@ -14,6 +14,7 @@ const HERO_SIZES = '(min-width: 768px) 480px, 150px'
 export function Hero() {
   const { data, isPending } = useQuery(featuredNftsQueryOptions())
   const [active, setActive] = useState(0)
+  const [switched, setSwitched] = useState(false)
 
   const slides = data?.items.slice(0, SLIDE_COUNT) ?? []
   const current = slides[active] ?? slides[0]
@@ -68,7 +69,10 @@ export function Hero() {
               type="button"
               aria-label={`Mostrar destaque ${index + 1}: ${slide.name}`}
               aria-current={index === active}
-              onClick={() => setActive(index)}
+              onClick={() => {
+                setActive(index)
+                setSwitched(true)
+              }}
               className="flex size-6 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               <span
@@ -98,7 +102,7 @@ export function Hero() {
                 image={current.image}
                 sizes={HERO_SIZES}
                 priority
-                className="motion-safe:animate-in motion-safe:fade-in-0"
+                className={switched ? 'motion-safe:animate-in motion-safe:fade-in-0' : undefined}
               />
             </Link>
             {next ? (

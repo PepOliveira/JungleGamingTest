@@ -1,5 +1,5 @@
 import { Link, useRouter, useSearch } from '@tanstack/react-router'
-import { useEffect, useRef } from 'react'
+import type { RefObject } from 'react'
 import { X } from 'lucide-react'
 import { Dialog as DialogPrimitive } from 'radix-ui'
 import { cn } from '@/shared/lib/utils'
@@ -13,22 +13,14 @@ import { SocialButtons } from './social-buttons'
 const tabClass =
   'rounded-sm px-1 text-lg font-bold outline-none focus-visible:ring-2 focus-visible:ring-ring'
 
-export function AuthDialog() {
+type AuthDialogProps = {
+  returnFocusRef: RefObject<HTMLElement | null>
+}
+
+export function AuthDialog({ returnFocusRef }: AuthDialogProps) {
   const router = useRouter()
   const search = authSearchSchema.parse(useSearch({ strict: false }))
   const session = useSession()
-  const returnFocusTo = useRef<HTMLElement | null>(null)
-
-  useEffect(() => {
-    function remember(event: FocusEvent) {
-      const target = event.target
-      if (target instanceof HTMLElement && !target.closest('[role="dialog"]')) {
-        returnFocusTo.current = target
-      }
-    }
-    document.addEventListener('focusin', remember)
-    return () => document.removeEventListener('focusin', remember)
-  }, [])
 
   const open = search.auth !== undefined && session.status !== 'authenticated'
   const isLogin = search.auth !== 'cadastro'
@@ -46,8 +38,8 @@ export function AuthDialog() {
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/70 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
         <DialogPrimitive.Content
           onCloseAutoFocus={(event) => {
-            const target = returnFocusTo.current
-            returnFocusTo.current = null
+            const target = returnFocusRef.current
+            returnFocusRef.current = null
             if (target?.isConnected) {
               event.preventDefault()
               target.focus()

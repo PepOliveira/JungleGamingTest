@@ -49,8 +49,8 @@ export function NftGallery({ images }: NftGalleryProps) {
             key={selected.url}
             image={selected}
             sizes="(min-width: 1024px) 440px, 90vw"
+            maxWidth={960}
             priority
-            className="motion-safe:animate-in motion-safe:fade-in-0"
           />
         </div>
         <DialogPrimitive.Root>
@@ -71,7 +71,7 @@ export function NftGallery({ images }: NftGalleryProps) {
                 {selected.alt}
               </DialogPrimitive.Description>
               <div className="aspect-square overflow-hidden rounded-xl bg-canvas">
-                <ResponsiveImage image={selected} sizes="720px" />
+                <ResponsiveImage image={selected} sizes="720px" maxWidth={960} />
               </div>
               <DialogPrimitive.Close className="absolute top-5 right-5 flex size-9 items-center justify-center rounded-full bg-background/80 outline-none hover:text-primary focus-visible:ring-2 focus-visible:ring-ring">
                 <X className="size-5" aria-hidden="true" />

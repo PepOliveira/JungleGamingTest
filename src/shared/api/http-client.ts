@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { env } from '@/shared/config/env'
+import { whenRuntimeReady } from '@/shared/config/runtime-ready'
 import type { ApiError } from './api-error'
 import { toApiError } from './api-error'
 import { serializeParams } from './serialize-params'
@@ -25,7 +26,8 @@ export const httpClient = axios.create({
   paramsSerializer: { serialize: (params) => serializeParams(params) },
 })
 
-httpClient.interceptors.request.use((config) => {
+httpClient.interceptors.request.use(async (config) => {
+  await whenRuntimeReady()
   const token = hooks.getAccessToken()
   if (token) {
     config.headers.set('Authorization', `Bearer ${token}`)

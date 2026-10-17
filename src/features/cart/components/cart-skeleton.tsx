@@ -20,6 +20,7 @@ export function CartSkeleton() {
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-10 w-full" />
       </div>
+      <Skeleton className="h-[666px] w-full lg:col-span-2 lg:h-[400px]" aria-hidden="true" />
     </div>
   )
 }

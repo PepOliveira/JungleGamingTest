@@ -32,6 +32,10 @@ export function NftDetailSkeleton() {
         <Skeleton className="h-10 w-full" />
         <Skeleton className="h-24 w-2/3" />
       </div>
+      <div className="flex flex-col gap-8 px-6 lg:col-span-2 lg:px-0" aria-hidden="true">
+        <Skeleton className="h-[360px] w-full" />
+        <Skeleton className="h-[580px] w-full lg:h-[500px]" />
+      </div>
     </div>
   )
 }

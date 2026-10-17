@@ -7,7 +7,9 @@ import lighthouse from 'lighthouse'
 
 const PORT = Number(process.env.LH_PORT ?? 4173)
 const RUNS = Number(process.env.LH_RUNS ?? 3)
-const BASE = `http://localhost:${PORT}`
+const REMOTE = process.env.LH_BASE_URL
+const BASE = REMOTE ?? `http://localhost:${PORT}`
+const SUFFIX = REMOTE ? '-deployed' : ''
 const TARGETS = { performance: 90, accessibility: 95, 'best-practices': 95, seo: 90 }
 const PAGES = [
   { name: 'home', path: '/' },
@@ -74,7 +76,7 @@ function configFor(profile) {
   return { extends: 'lighthouse:default' }
 }
 
-const REPORT_DIR = 'docs/lighthouse'
+const REPORT_DIR = `docs/lighthouse${SUFFIX}`
 
 async function measure(url, profile, label) {
   const chrome = await launch({
@@ -111,14 +113,14 @@ async function measure(url, profile, label) {
   }
 }
 
-const server = startPreview()
+const server = REMOTE ? null : startPreview()
 const rows = []
 let failed = false
 let environment = null
 await mkdir(REPORT_DIR, { recursive: true })
 
 try {
-  await waitForServer()
+  if (!REMOTE) await waitForServer()
 
   for (const page of PAGES) {
     for (const profile of PROFILES) {
@@ -144,7 +146,7 @@ try {
     }
   }
 } finally {
-  server.kill()
+  server?.kill()
 }
 
 const packageJson = JSON.parse(await readFile('package.json', 'utf8'))
@@ -157,7 +159,9 @@ const meta = {
     chrome: environment?.chrome,
     node: process.version,
     vite: packageJson.devDependencies?.vite,
-    app: 'vite preview (build de produção, mocks ligados, cenário default)',
+    app: REMOTE
+      ? `${REMOTE} (Vercel: CDN, HTTP/2 e Brotli; build de produção, mocks ligados, cenário default)`
+      : 'vite preview (build de produção, mocks ligados, cenário default)',
   },
   host: {
     os: `${os.type()} ${os.release()} (${os.arch()})`,
@@ -182,9 +186,9 @@ const lines = [
       `| ${row.page} | ${row.profile} | ${row.scores.performance} | ${row.scores.accessibility} | ${row.scores['best-practices']} | ${row.scores.seo} | ${Math.round(row.metrics.LCP)} ms | ${row.metrics.CLS.toFixed(3)} | ${Math.round(row.metrics.TBT)} ms |`,
   ),
 ]
-await writeFile('docs/lighthouse-results.md', `${lines.join('\n')}\n`)
+await writeFile(`docs/lighthouse${SUFFIX}-results.md`, `${lines.join('\n')}\n`)
 await writeFile(
-  'docs/lighthouse-results.json',
+  `docs/lighthouse${SUFFIX}-results.json`,
   `${JSON.stringify({ meta, results: rows }, null, 2)}\n`,
 )
 

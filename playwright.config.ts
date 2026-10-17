@@ -1,7 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 
 const PORT = Number(process.env.E2E_PORT ?? 5174)
-const baseURL = `http://localhost:${PORT}`
+const remoteURL = process.env.E2E_BASE_URL
+const baseURL = remoteURL ?? `http://localhost:${PORT}`
 
 export default defineConfig({
   testDir: './e2e',
@@ -42,15 +43,17 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
   ],
-  webServer: {
-    command: `npm run dev -- --port ${PORT} --strictPort`,
-    url: baseURL,
-    reuseExistingServer: !process.env.CI,
-    timeout: 60_000,
-    env: {
-      VITE_ENABLE_MOCKS: 'true',
-      VITE_MOCK_SCENARIO: 'instant',
-      VITE_REQUEST_TIMEOUT_MS: '2500',
-    },
-  },
+  webServer: remoteURL
+    ? undefined
+    : {
+        command: `npm run dev -- --port ${PORT} --strictPort`,
+        url: baseURL,
+        reuseExistingServer: !process.env.CI,
+        timeout: 60_000,
+        env: {
+          VITE_ENABLE_MOCKS: 'true',
+          VITE_MOCK_SCENARIO: 'instant',
+          VITE_REQUEST_TIMEOUT_MS: '2500',
+        },
+      },
 })

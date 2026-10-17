@@ -22,7 +22,7 @@ import { RelatedNfts } from './related-nfts'
 import { ShareLinks } from './share-links'
 import { RatingBadge, StarRating } from './star-rating'
 
-const containerClass = 'mx-auto w-full max-w-[1200px] pb-40 lg:px-6 lg:pb-12'
+const containerClass = 'mx-auto w-full max-w-[1248px] pb-40 lg:px-6 lg:pb-12'
 
 export function NftDetailPage() {
   const { nftId } = useParams({ from: '/nfts/$nftId' })
@@ -251,7 +251,7 @@ function NftDetailContent({ nft }: NftDetailContentProps) {
             size="lg"
             disabled={!canAdd}
             onClick={handleBuyNow}
-            className="h-14 flex-1 rounded-full bg-gradient-to-b from-[#eaaa72] to-[#c98b55] text-base font-bold"
+            className="h-[60px] w-[196px] flex-none rounded-full bg-gradient-to-b from-[#eaaa72] to-[#c98b55] text-base font-bold"
           >
             Comprar NFT
           </Button>
@@ -259,7 +259,7 @@ function NftDetailContent({ nft }: NftDetailContentProps) {
             type="button"
             disabled={!canAdd}
             onClick={handleAddOnly}
-            className="flex size-14 items-center justify-center rounded-full border border-border bg-background/40 outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
+            className="flex size-[60px] items-center justify-center rounded-full border border-border bg-background/40 outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
           >
             <ShoppingCart className="size-5 text-primary" aria-hidden="true" />
             <span className="sr-only">Adicionar ao carrinho</span>

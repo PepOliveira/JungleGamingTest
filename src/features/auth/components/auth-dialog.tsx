@@ -97,7 +97,7 @@ export function AuthDialog({ returnFocusRef }: AuthDialogProps) {
               </p>
             ) : null}
 
-            <div className="mx-auto mt-8 flex w-full flex-col gap-6 md:max-w-[340px]">
+            <div className="mx-auto mt-8 flex w-full flex-col gap-6 max-md:gap-10 md:max-w-[340px]">
               {isLogin ? (
                 <LoginForm key="login" returnTo={search.retorno} />
               ) : (
@@ -106,7 +106,7 @@ export function AuthDialog({ returnFocusRef }: AuthDialogProps) {
               <SocialButtons />
             </div>
 
-            <p className="mt-auto pt-10 text-center text-sm text-warm md:hidden">
+            <p className="pt-14 text-center text-sm text-warm md:hidden">
               {isLogin ? 'Novo na Kurio? ' : 'Já tem uma conta? '}
               <Link
                 to="."

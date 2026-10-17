@@ -53,7 +53,7 @@ export function LoginForm({ returnTo }: LoginFormProps) {
       <div className="flex justify-end">
         <UnavailableLink
           secao="recuperar-senha"
-          className="rounded-sm text-xs text-primary outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+          className="rounded-sm text-xs text-primary outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring max-md:text-base"
         >
           Esqueceu a senha?
         </UnavailableLink>
@@ -66,7 +66,7 @@ export function LoginForm({ returnTo }: LoginFormProps) {
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="mt-2 h-12 w-full rounded-xl text-base font-bold md:h-11 md:rounded-sm"
+        className="mt-2 h-12 w-full rounded-xl text-base font-bold max-md:mt-6 max-md:h-[60px] md:h-11 md:rounded-sm"
       >
         {isSubmitting ? 'Entrando...' : 'Entrar'}
       </Button>

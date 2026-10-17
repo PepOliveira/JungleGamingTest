@@ -9,7 +9,7 @@ export function MobileSearchBar() {
   return (
     <div className="mb-5 flex items-center gap-3 pt-5 md:hidden">
       <SearchField
-        className="flex-1"
+        className="min-w-0 flex-1"
         value={search.q ?? ''}
         label="Buscar NFTs"
         placeholder="Explorar coleções"

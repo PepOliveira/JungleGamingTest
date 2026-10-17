@@ -28,7 +28,7 @@ export function CollectorFields({ register, errors, profile, wallet }: Collector
       <h2 id="collector-title" className="text-base font-bold">
         Perfil do colecionador
       </h2>
-      <div className="grid gap-x-10 gap-y-6 lg:grid-cols-2">
+      <div className="grid gap-x-10 gap-y-6 lg:grid-cols-2 lg:gap-x-[23px]">
         <TextField
           label="Nome de exibição"
           required

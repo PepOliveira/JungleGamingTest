@@ -49,8 +49,11 @@ export function AccountLayout() {
   }
 
   return (
-    <div className="mx-auto grid w-full max-w-[1200px] grid-cols-1 gap-6 px-4 py-6 pb-32 lg:grid-cols-[310px_minmax(0,1fr)] lg:gap-8 lg:px-6 lg:pt-8 lg:pb-16">
-      <nav aria-label="Menu da conta" className="min-w-0 lg:rounded-lg lg:bg-card lg:py-2">
+    <div className="mx-auto grid w-full max-w-[1248px] grid-cols-1 gap-6 px-4 py-6 pb-32 lg:grid-cols-[310px_minmax(0,1fr)] lg:gap-7 lg:px-6 lg:pt-8 lg:pb-16">
+      <nav
+        aria-label="Menu da conta"
+        className="min-w-0 lg:self-start lg:rounded-lg lg:bg-card lg:py-2"
+      >
         <h2 className="hidden px-4 pt-3 pb-2 text-lg font-bold lg:block">Meu perfil</h2>
         <ul className="-mx-4 flex gap-2 overflow-x-auto px-4 pb-1 lg:mx-0 lg:flex-col lg:gap-0 lg:overflow-visible lg:px-0 lg:pb-0">
           {items.map((item) => (

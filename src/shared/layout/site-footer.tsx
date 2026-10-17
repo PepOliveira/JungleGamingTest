@@ -33,25 +33,27 @@ const socialIcons: Record<(typeof socialLinks)[number]['label'], IconType> = {
 export function SiteFooter() {
   return (
     <footer className="mt-16 pb-32 md:pb-0">
-      <div className="mx-auto w-full max-w-[1200px] px-6">
-        <div className="grid gap-8 rounded-t-lg bg-card p-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-0 lg:p-8">
+      <div className="mx-auto w-full max-w-[1248px] px-6">
+        <div className="grid gap-8 rounded-t-lg bg-card p-6 md:grid-cols-2 lg:grid-cols-[248px_266px_266px_1fr] lg:gap-0 lg:py-8 lg:pr-8 lg:pl-12">
           {benefits.map((benefit) => (
             <section
               key={benefit.title}
-              className="flex flex-col gap-3 lg:border-r lg:border-border lg:px-6 lg:first:pl-0"
+              className="flex flex-col gap-3 lg:border-l lg:border-primary lg:pl-[17px] lg:first:border-l-0 lg:first:pl-0"
             >
               <span
                 aria-hidden="true"
-                className="flex size-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground"
+                className="flex size-12 items-center justify-center rounded-full bg-primary text-lg font-bold text-primary-foreground lg:size-[74px] lg:text-3xl"
               >
                 {benefit.initial}
               </span>
-              <h2 className="text-sm font-bold">{benefit.title}</h2>
+              <h2 className="text-[17px] font-bold">{benefit.title}</h2>
               <p className="text-xs leading-relaxed text-muted-foreground">{benefit.text}</p>
             </section>
           ))}
-          <section className="flex flex-col gap-3 lg:pl-6">
-            <h2 className="text-sm leading-tight font-bold">Antecipe-se ao próximo lançamento</h2>
+          <section className="flex flex-col gap-3 lg:border-l lg:border-primary lg:pl-[17px]">
+            <h2 className="text-[17px] leading-tight font-bold">
+              Antecipe-se ao próximo lançamento
+            </h2>
             <NewsletterForm />
             <p className="text-xs leading-relaxed text-muted-foreground">
               Receba lançamentos selecionados, histórias de criadores e novidades do mercado.
@@ -59,9 +61,9 @@ export function SiteFooter() {
           </section>
         </div>
 
-        <div className="grid items-center gap-3 bg-secondary px-6 py-6 text-xs md:grid-cols-4 lg:px-8">
-          <p className="text-sm font-bold tracking-[0.1em]">KURIO</p>
-          <p>Feito para colecionadores, criadores e cultura</p>
+        <div className="grid items-center gap-3 bg-secondary px-6 py-6 text-xs md:grid-cols-4 lg:grid-cols-[303px_303px_303px_1fr] lg:gap-x-0 lg:px-8">
+          <p className="text-xs font-bold tracking-[0.1em]">KURIO</p>
+          <p className="lg:max-w-[240px]">Feito para colecionadores, criadores e cultura</p>
           <a href="mailto:contato@email.com" className="rounded-sm hover:text-primary">
             contato@email.com
           </a>
@@ -70,10 +72,10 @@ export function SiteFooter() {
           </a>
         </div>
 
-        <div className="grid gap-8 rounded-b-lg bg-card p-6 sm:grid-cols-2 lg:grid-cols-4 lg:p-8">
+        <div className="grid gap-8 rounded-b-lg bg-card p-6 sm:grid-cols-2 lg:grid-cols-[303px_303px_303px_1fr] lg:gap-0 lg:p-8">
           {footerSections.map((section) => (
             <nav key={section.title} aria-label={section.title} className="flex flex-col gap-3">
-              <h2 className="text-sm font-bold">{section.title}</h2>
+              <h2 className="text-base font-bold">{section.title}</h2>
               <ul className="flex flex-col gap-2 text-xs text-muted-foreground">
                 {section.links.map((link) => (
                   <li key={link.secao}>
@@ -87,7 +89,7 @@ export function SiteFooter() {
           ))}
           <div className="flex flex-col gap-5">
             <section className="flex flex-col gap-3">
-              <h2 className="text-sm font-bold">Redes sociais</h2>
+              <h2 className="text-base font-bold">Redes sociais</h2>
               <ul className="flex gap-2">
                 {socialLinks.map((social) => {
                   const Icon = socialIcons[social.label]
@@ -108,8 +110,8 @@ export function SiteFooter() {
               </ul>
             </section>
             <section className="flex flex-col gap-3">
-              <h2 className="text-sm font-bold">Carteiras compatíveis</h2>
-              <p className="rounded-sm bg-secondary px-3 py-2 text-[10px] tracking-wide text-primary">
+              <h2 className="text-base font-bold">Carteiras compatíveis</h2>
+              <p className="rounded-sm bg-secondary px-2 py-2 text-[9px] tracking-normal whitespace-nowrap text-primary">
                 {compatibleWallets.join(' · ')}
               </p>
             </section>

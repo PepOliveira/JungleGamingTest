@@ -17,7 +17,7 @@ export function JournalSection() {
         {journalArticles.map((article) => (
           <li key={article.id}>
             <article className="flex h-full flex-col overflow-hidden rounded-xl bg-card">
-              <div className="aspect-[4/3] bg-canvas">
+              <div className="aspect-[4/3] overflow-hidden bg-canvas">
                 <ResponsiveImage
                   image={article.image}
                   sizes="(min-width: 1024px) 280px, (min-width: 640px) 45vw, 90vw"

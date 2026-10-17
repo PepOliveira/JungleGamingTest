@@ -9,7 +9,7 @@ import { PromoBanners } from './promo-banners'
 
 export function CatalogPage() {
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 pb-8 md:px-6 md:pt-8">
+    <div className="mx-auto w-full max-w-[1248px] px-6 pb-8 md:pt-8">
       <MobileSearchBar />
       <Hero />
       <div id="catalogo" className="grid scroll-mt-6 gap-8 lg:grid-cols-[260px_minmax(0,1fr)]">

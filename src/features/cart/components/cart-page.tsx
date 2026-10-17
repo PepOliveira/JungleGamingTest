@@ -53,7 +53,7 @@ export function CartPage() {
           Carrinho de NFTs
         </p>
       </div>
-      <nav aria-label="Você está em" className="mb-4 hidden text-xs font-bold lg:block">
+      <nav aria-label="Você está em" className="mb-1 hidden text-xs font-bold lg:block">
         <ol className="flex items-center gap-1">
           <li>
             <Link to="/" className="rounded-sm hover:text-primary">
@@ -75,7 +75,7 @@ export function CartPage() {
 
   if (query.isPending) {
     return (
-      <div className="mx-auto w-full max-w-[1200px] px-4 pb-10 lg:px-6 lg:pt-8">
+      <div className="mx-auto w-full max-w-[1248px] px-7 pb-10 lg:px-6 lg:pt-8">
         {header}
         <h1 className="sr-only">Carrinho de NFTs</h1>
         <CartSkeleton />
@@ -85,7 +85,7 @@ export function CartPage() {
 
   if (query.isError) {
     return (
-      <div className="mx-auto w-full max-w-[1200px] px-4 pb-10 lg:px-6 lg:pt-8">
+      <div className="mx-auto w-full max-w-[1248px] px-7 pb-10 lg:px-6 lg:pt-8">
         {header}
         <h1 className="sr-only">Carrinho de NFTs</h1>
         <ErrorState
@@ -102,18 +102,18 @@ export function CartPage() {
   const hasBlockingItems = cart.items.some((item) => item.quantity > item.available)
 
   return (
-    <div className="mx-auto w-full max-w-[1200px] px-4 pb-[26rem] lg:px-6 lg:pt-8 lg:pb-12">
+    <div className="mx-auto w-full max-w-[1248px] px-7 pb-[26rem] lg:px-6 lg:pt-8 lg:pb-12">
       {header}
       <h1 className="sr-only">Carrinho de NFTs</h1>
 
       {cart.items.length === 0 ? (
         <EmptyCart />
       ) : (
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px] lg:gap-12">
+        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_332px] lg:gap-[86px]">
           <section aria-label="Itens do carrinho">
             <div
               aria-hidden="true"
-              className="mb-3 hidden grid-cols-[minmax(0,2.2fr)_1fr_1.2fr_1fr_40px] border-b border-border px-3 pb-3 text-sm lg:grid"
+              className="mb-3 hidden grid-cols-[311px_139px_136px_minmax(0,1fr)_40px] border-b border-border pb-3 text-sm lg:grid"
             >
               <span>NFTs</span>
               <span>Preço</span>

@@ -13,7 +13,7 @@ import { useOrder } from '../use-order'
 import { OrderDeclinedCard, OrderPendingCard } from './order-status-cards'
 import { OrderReceipt } from './order-receipt'
 
-const wrapperClass = 'mx-auto w-full max-w-[1200px] px-4 py-10 pb-32 lg:px-6 lg:py-16'
+const wrapperClass = 'mx-auto w-full max-w-[1248px] px-4 py-10 pb-32 lg:px-6 lg:py-16'
 
 export function OrderPage() {
   const { orderId } = useParams({ from: '/pedido/$orderId' })

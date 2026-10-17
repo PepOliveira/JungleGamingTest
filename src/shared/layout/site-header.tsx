@@ -13,7 +13,7 @@ type SiteHeaderProps = {
 }
 
 const navLinkClass =
-  '-mb-px flex h-full items-center border-b-2 border-transparent px-1 text-sm font-medium text-foreground/85 transition-colors hover:text-primary'
+  '-mb-px flex h-full items-center border-b-2 border-transparent px-1 text-[14px] font-medium text-foreground/85 lg:text-base transition-colors hover:text-primary'
 
 const navLinkActiveClass = 'border-primary text-primary'
 
@@ -24,9 +24,12 @@ export function SiteHeader({ cartCount, searchSlot, accountSlot }: SiteHeaderPro
 
   return (
     <header className="hidden border-b border-border md:block">
-      <div className="mx-auto flex h-[68px] w-full max-w-[1200px] items-center justify-between px-6">
+      <div className="mx-auto grid h-[68px] w-full max-w-[1248px] grid-cols-[1fr_auto_1fr] items-center px-6">
         <Logo />
-        <nav aria-label="Principal" className="flex h-full items-center gap-10">
+        <nav
+          aria-label="Principal"
+          className="flex h-full items-center gap-5 lg:-translate-x-6 lg:gap-9"
+        >
           <Link
             to="/"
             activeOptions={{ exact: true, includeSearch: false }}
@@ -49,7 +52,7 @@ export function SiteHeader({ cartCount, searchSlot, accountSlot }: SiteHeaderPro
             </UnavailableLink>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center justify-self-end gap-4">
           {searchSlot}
           <Link
             to="/carrinho"

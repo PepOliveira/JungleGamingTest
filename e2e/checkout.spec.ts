@@ -136,4 +136,41 @@ test.describe('checkout', () => {
 
     await expect(page.getByText('Pedido não encontrado')).toBeVisible()
   })
+
+  test('valida os campos do coletor antes de enviar o pedido', async ({ page, login }) => {
+    await login()
+    await addToCart(page, 'nft_001')
+    await goToCheckout(page)
+    await connectWallet(page)
+
+    await page
+      .locator('main')
+      .getByLabel(/^E-mail/)
+      .first()
+      .fill('isto-nao-e-email')
+    await confirmPurchase(page)
+
+    await expect(page.getByRole('alert').first()).toBeVisible()
+    await expect(page).toHaveURL(/\/pagamento$/)
+    expect(await listOrders(page)).toHaveLength(0)
+  })
+
+  test('desconectar a carteira bloqueia a confirmação até conectar de novo', async ({
+    page,
+    login,
+  }) => {
+    await login()
+    await addToCart(page, 'nft_001')
+    await goToCheckout(page)
+    await connectWallet(page)
+    await expect(page.getByRole('button', { name: /^Confirmar/ })).toBeEnabled()
+
+    await page.getByRole('button', { name: 'Desconectar' }).click()
+
+    await expect(page.getByRole('button', { name: 'Conectar carteira' })).toBeVisible()
+    await expect(page.getByRole('button', { name: /^Confirmar/ })).toBeDisabled()
+
+    await connectWallet(page)
+    await expect(page.getByRole('button', { name: /^Confirmar/ })).toBeEnabled()
+  })
 })

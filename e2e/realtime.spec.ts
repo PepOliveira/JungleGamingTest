@@ -103,4 +103,28 @@ test.describe('tempo real', () => {
     await expect(page.getByRole('link', { name: 'Entrar' })).toBeVisible()
     await realtime.waitForStatus('online')
   })
+
+  test('o evento order.updated confirma o pedido mesmo sem o polling da API', async ({
+    page,
+    mocks,
+    login,
+    realtime,
+  }) => {
+    await page.goto('/')
+    await mocks.setScenario('default')
+    await login()
+    await addToCart(page, 'nft_001')
+    await goToCheckout(page)
+    await connectWallet(page)
+    await realtime.waitForStatus('online')
+    await confirmPurchase(page)
+    await page.waitForURL('**/pedido/**')
+    await expect(page.getByText('Processando seu pedido')).toBeVisible()
+
+    await mocks.addFault({ method: 'GET', path: '/orders/', effect: 'delay', delayMs: 30_000 })
+
+    await expect(page.getByText('Seus NFTs agora estão na sua carteira')).toBeVisible({
+      timeout: 10_000,
+    })
+  })
 })

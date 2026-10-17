@@ -85,4 +85,10 @@ test.describe('catálogo', () => {
     await expect(page).toHaveURL(/\/nfts\/nft_002$/)
     await expect(page.getByRole('heading', { level: 1 })).toContainText('Sage Nomad #009')
   })
+
+  test('rota inexistente mostra a página de não encontrado', async ({ page }) => {
+    await page.goto('/rota-que-nao-existe')
+
+    await expect(page.getByRole('heading', { name: 'Página não encontrada' })).toBeVisible()
+  })
 })

@@ -6,6 +6,7 @@ const baseURL = `http://localhost:${PORT}`
 export default defineConfig({
   testDir: './e2e',
   outputDir: './test-results',
+  snapshotPathTemplate: '{testDir}/__screenshots__/{testFileName}/{arg}{ext}',
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
@@ -17,7 +18,7 @@ export default defineConfig({
   },
   use: {
     baseURL,
-    trace: 'on-first-retry',
+    trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     locale: 'pt-BR',
@@ -27,11 +28,18 @@ export default defineConfig({
   projects: [
     {
       name: 'desktop',
+      testIgnore: /visual\.spec/,
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
     {
       name: 'mobile',
+      testIgnore: /(visual|responsive)\.spec/,
       use: { ...devices['Pixel 7'], viewport: { width: 390, height: 844 } },
+    },
+    {
+      name: 'visual',
+      testMatch: /visual\.spec/,
+      use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 900 } },
     },
   ],
   webServer: {

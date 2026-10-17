@@ -9,8 +9,20 @@ type GuardArgs = {
 }
 
 export async function requireAuthenticated({ context, location }: GuardArgs) {
-  const toLogin = () =>
-    redirect({ to: '/', search: { auth: 'entrar', retorno: location.href }, replace: true })
+  const toLogin = () => {
+    const expired =
+      new URL(location.href, window.location.origin).searchParams.get('motivo') ===
+      'sessao-expirada'
+    return redirect({
+      to: '/',
+      search: {
+        auth: 'entrar',
+        retorno: location.href,
+        ...(expired ? { motivo: 'sessao-expirada' as const } : {}),
+      },
+      replace: true,
+    })
+  }
 
   if (!sessionStore.getAccessToken()) {
     throw toLogin()

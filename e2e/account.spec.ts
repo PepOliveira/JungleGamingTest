@@ -27,7 +27,10 @@ test.describe('perfil', () => {
     await login()
     await page.goto('/perfil')
 
-    await page.getByLabel('E-mail', { exact: true }).fill('isto-nao-e-email')
+    await page
+      .locator('main')
+      .getByLabel(/^E-mail/)
+      .fill('isto-nao-e-email')
     await page.getByRole('button', { name: 'Salvar' }).click()
 
     await expect(page.getByRole('alert').first()).toBeVisible()
@@ -75,7 +78,53 @@ test.describe('perfil', () => {
   })
 })
 
+const PNG_PIXEL = Buffer.from(
+  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+  'base64',
+)
+
+test.describe('avatar', () => {
+  test('envia, persiste após recarregar e remove o avatar', async ({ page, login }) => {
+    await login()
+    await page.goto('/perfil')
+    const input = page.getByLabel('Escolher imagem de avatar')
+
+    await input.setInputFiles({ name: 'avatar.png', mimeType: 'image/png', buffer: PNG_PIXEL })
+    await expect(page.getByRole('status').filter({ hasText: 'Avatar atualizado' })).toBeAttached()
+
+    await page.reload()
+    await expect(page.locator('main img[src^="data:"]').first()).toBeVisible()
+
+    await page.getByRole('button', { name: 'Remover' }).click()
+    await expect(page.getByRole('status').filter({ hasText: 'Avatar removido' })).toBeAttached()
+  })
+
+  test('rejeita arquivo que não é imagem', async ({ page, login }) => {
+    await login()
+    await page.goto('/perfil')
+
+    await page.getByLabel('Escolher imagem de avatar').setInputFiles({
+      name: 'nota.txt',
+      mimeType: 'text/plain',
+      buffer: Buffer.from('não sou uma imagem'),
+    })
+
+    await expect(page.getByRole('alert').first()).toBeVisible()
+  })
+})
+
 test.describe('carteiras', () => {
+  test('valida o endereço antes de salvar', async ({ page, login }) => {
+    await login()
+    await page.goto('/perfil/carteiras')
+    const address = page.getByLabel(/^Endereço da carteira/).first()
+
+    await address.fill('endereco-invalido')
+    await page.getByRole('button', { name: 'Salvar carteira' }).first().click()
+
+    await expect(page.getByRole('alert').first()).toBeVisible()
+  })
+
   test('lista a carteira principal do colecionador', async ({ page, login }) => {
     await login()
     await page.goto('/perfil/carteiras')

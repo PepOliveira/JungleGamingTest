@@ -5,10 +5,11 @@ export type ScenarioName = 'default' | 'instant' | 'slow' | 'payment-declined' |
 export type FaultInput = {
   method?: string
   path: string
-  effect: 'status' | 'network' | 'timeout'
+  effect: 'status' | 'network' | 'timeout' | 'delay'
   status?: number
   code?: string
   message?: string
+  delayMs?: number
   times?: number
 }
 

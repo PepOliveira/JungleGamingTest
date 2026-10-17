@@ -1,4 +1,5 @@
 import { Link, useRouter, useSearch } from '@tanstack/react-router'
+import { useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
 import { Dialog as DialogPrimitive } from 'radix-ui'
 import { cn } from '@/shared/lib/utils'
@@ -16,6 +17,18 @@ export function AuthDialog() {
   const router = useRouter()
   const search = authSearchSchema.parse(useSearch({ strict: false }))
   const session = useSession()
+  const returnFocusTo = useRef<HTMLElement | null>(null)
+
+  useEffect(() => {
+    function remember(event: FocusEvent) {
+      const target = event.target
+      if (target instanceof HTMLElement && !target.closest('[role="dialog"]')) {
+        returnFocusTo.current = target
+      }
+    }
+    document.addEventListener('focusin', remember)
+    return () => document.removeEventListener('focusin', remember)
+  }, [])
 
   const open = search.auth !== undefined && session.status !== 'authenticated'
   const isLogin = search.auth !== 'cadastro'
@@ -31,7 +44,17 @@ export function AuthDialog() {
     >
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="fixed inset-0 z-50 bg-black/70 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:animate-in data-[state=open]:fade-in-0" />
-        <DialogPrimitive.Content className="fixed inset-0 z-50 overflow-y-auto bg-background outline-none md:inset-auto md:top-[160px] md:left-1/2 md:max-h-[calc(100dvh-10rem)] md:w-[500px] md:-translate-x-1/2 md:border-b-[6px] md:border-primary md:bg-card">
+        <DialogPrimitive.Content
+          onCloseAutoFocus={(event) => {
+            const target = returnFocusTo.current
+            returnFocusTo.current = null
+            if (target?.isConnected) {
+              event.preventDefault()
+              target.focus()
+            }
+          }}
+          className="fixed inset-0 z-50 overflow-y-auto bg-background outline-none md:inset-auto md:top-[160px] md:left-1/2 md:max-h-[calc(100dvh-10rem)] md:w-[500px] md:-translate-x-1/2 md:border-b-[6px] md:border-primary md:bg-card"
+        >
           <div className="mx-auto flex min-h-full w-full max-w-[420px] flex-col px-7 pt-[130px] pb-10 md:max-w-none md:px-0 md:pt-8 md:pb-10">
             <p
               aria-hidden="true"

@@ -1,4 +1,6 @@
 import { env } from '@/shared/config/env'
+import { setRequestPreflight } from '@/shared/config/runtime-ready'
+import { ensureWorkerActive, startWorkerHeartbeat } from './worker-keepalive'
 import type { MockControls } from './controls'
 
 declare global {
@@ -17,6 +19,9 @@ export async function enableMocking() {
     import('./controls'),
   ])
   await worker.start({ onUnhandledFrame: 'bypass', quiet: true })
+
+  setRequestPreflight(ensureWorkerActive)
+  startWorkerHeartbeat()
 
   window.__KURIO_MOCKS__ = createMockControls()
 }

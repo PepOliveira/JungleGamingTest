@@ -4,7 +4,7 @@ import type { NftListQueryInput } from '@/contracts/nft'
 import { ethCompare } from '@/shared/lib/eth'
 import type { NftRecord } from '../db/types'
 import { createCatalog } from '../fixtures/catalog'
-import { buildFacets, filterNfts, paginate, sortNfts } from './catalog'
+import { buildFacets, filterNfts, paginate, relatedNfts, sortNfts } from './catalog'
 
 function query(input: NftListQueryInput = {}) {
   return nftListQuerySchema.parse(input)
@@ -37,10 +37,24 @@ describe('catalog fixtures', () => {
     expect(price).toEqual({ min: '0.02', max: '12.30' })
   })
 
-  it('keeps summary price equal to the first edition price', () => {
+  it('keeps summary price equal to the default edition price', () => {
     for (const nft of catalog) {
-      expect(nft.price).toBe(nft.editions[0]?.price)
+      const defaultEdition = nft.editions.find((edition) => edition.id === nft.defaultEditionId)
+      expect(defaultEdition).toBeDefined()
+      expect(nft.price).toBe(defaultEdition?.price)
     }
+  })
+
+  it('offers the editions shown in the design for the featured NFTs', () => {
+    const [first] = catalog
+    expect(first?.editions.map((edition) => edition.label)).toEqual([
+      '1/1',
+      '1/10',
+      '1/50',
+      'ABERTA',
+    ])
+    expect(first?.tokenId).toBe('#0042')
+    expect(first?.rating).toEqual({ average: 4.8, count: 19 })
   })
 })
 
@@ -61,7 +75,7 @@ describe('filterNfts', () => {
   it('searches ignoring case and accents', () => {
     const result = filterNfts(catalog, query({ q: 'MUSICA' }))
     expect(result.length).toBeGreaterThan(0)
-    expect(result.every((nft) => nft.tags.includes('Música'))).toBe(true)
+    expect(result.every((nft) => nft.collection === 'musica')).toBe(true)
   })
 
   it('applies the tabs', () => {
@@ -111,5 +125,16 @@ describe('buildFacets', () => {
     const facets = buildFacets(catalog, query({ networks: ['solana'] }))
     const total = Object.values(facets.collections).reduce((sum, count) => sum + count, 0)
     expect(total).toBe(catalog.filter((nft) => nft.network === 'solana').length)
+  })
+})
+
+describe('relatedNfts', () => {
+  it('excludes the NFT itself and prefers the same collection', () => {
+    const [first] = catalog
+    if (!first) throw new Error('empty catalog')
+    const related = relatedNfts(catalog, first, 12)
+    expect(related).toHaveLength(12)
+    expect(related.some((nft) => nft.id === first.id)).toBe(false)
+    expect(related[0]?.collectionName).toBe(first.collectionName)
   })
 })

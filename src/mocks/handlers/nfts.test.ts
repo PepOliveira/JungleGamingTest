@@ -1,6 +1,11 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest'
 import { endpoints } from '@/contracts/endpoints'
-import { featuredNftsResponseSchema, nftDetailSchema, nftListResponseSchema } from '@/contracts/nft'
+import {
+  featuredNftsResponseSchema,
+  nftDetailSchema,
+  nftListResponseSchema,
+  relatedNftsResponseSchema,
+} from '@/contracts/nft'
 import { isApiError } from '@/shared/api/api-error'
 import { apiRequest } from '@/shared/api/request'
 import { resetDb } from '../db/store'
@@ -70,11 +75,32 @@ describe('GET /nfts/featured', () => {
   })
 })
 
+describe('GET /nfts/:id/related', () => {
+  it('returns other NFTs from the same collection first', async () => {
+    const response = await apiRequest(
+      { url: endpoints.nfts.related('nft_001') },
+      relatedNftsResponseSchema,
+    )
+    expect(response.items).toHaveLength(12)
+    expect(response.items.some((item) => item.id === 'nft_001')).toBe(false)
+  })
+
+  it('responds 404 for an unknown NFT', async () => {
+    const error = await apiRequest(
+      { url: endpoints.nfts.related('nft_999') },
+      relatedNftsResponseSchema,
+    ).catch((reason: unknown) => reason)
+    expect(isApiError(error) && error.kind).toBe('not_found')
+  })
+})
+
 describe('GET /nfts/:id', () => {
   it('returns the NFT detail', async () => {
     const detail = await apiRequest({ url: endpoints.nfts.detail('nft_003') }, nftDetailSchema)
     expect(detail.name).toBe('Neon Vessel #552')
     expect(detail.editions.length).toBeGreaterThan(0)
+    expect(detail.editions.some((edition) => edition.id === detail.defaultEditionId)).toBe(true)
+    expect(detail.tokenId).toBe('#0552')
     expect(detail.gallery.length).toBeGreaterThan(0)
   })
 

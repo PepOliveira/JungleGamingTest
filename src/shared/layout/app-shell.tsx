@@ -1,4 +1,4 @@
-import { Outlet } from '@tanstack/react-router'
+import { Outlet, useRouterState } from '@tanstack/react-router'
 import type { ReactNode } from 'react'
 import { MobileTabBar } from './mobile-tab-bar'
 import { SiteFooter } from './site-footer'
@@ -9,6 +9,9 @@ type AppShellProps = {
 }
 
 export function AppShell({ headerSearch }: AppShellProps) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const hideTabBar = pathname.startsWith('/nfts/')
+
   return (
     <div className="flex min-h-dvh flex-col">
       <a
@@ -22,7 +25,7 @@ export function AppShell({ headerSearch }: AppShellProps) {
         <Outlet />
       </main>
       <SiteFooter />
-      <MobileTabBar />
+      {hideTabBar ? null : <MobileTabBar />}
     </div>
   )
 }

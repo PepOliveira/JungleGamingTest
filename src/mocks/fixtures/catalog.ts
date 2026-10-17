@@ -4,45 +4,41 @@ import { createRng } from '../utils/rng'
 import type { Rng } from '../utils/rng'
 import { centsToEth } from '../utils/text'
 import type { NftRecord } from '../db/types'
+import { collectionLabels, networkLabels } from './labels'
 
-type Character = { image: string; alt: string }
+type Character = {
+  image: string
+  alt: string
+  collectionName: string
+  attributes: readonly string[]
+}
 
 const characters: readonly Character[] = [
   {
     image: '/assets/nfts/emerald-ape-640.webp',
     alt: 'Macaco marrom de óculos redondos e jaqueta verde',
+    collectionName: 'Kurio Apes',
+    attributes: ['Óculos', 'Esmeralda'],
   },
   {
     image: '/assets/nfts/sage-nomad-640.webp',
     alt: 'Macaco cinza com chapéu verde e moletom roxo',
+    collectionName: 'Sage Nomads',
+    attributes: ['Chapéu', 'Moletom roxo'],
   },
   {
     image: '/assets/nfts/neon-vessel-640.webp',
     alt: 'Macaco preto com brinco dourado e gola alta verde',
+    collectionName: 'Obsidian Vessels',
+    attributes: ['Brinco dourado', 'Gola alta'],
   },
   {
     image: '/assets/nfts/golden-beat-640.webp',
     alt: 'Macaco dourado com fones de ouvido verdes',
+    collectionName: 'Golden Frequencies',
+    attributes: ['Fones de ouvido', 'Jaqueta creme'],
   },
 ]
-
-const collectionLabels: Record<CollectionSlug, string> = {
-  'arte-digital': 'Arte digital',
-  fotografia: 'Fotografia',
-  musica: 'Música',
-  'arte-3d': 'Arte 3D',
-  colecionaveis: 'Colecionáveis',
-  generativa: 'Generativa',
-  jogos: 'Jogos',
-  assinaturas: 'Assinaturas',
-  utilidade: 'Utilidade',
-}
-
-const networkLabels: Record<Network, string> = {
-  ethereum: 'Ethereum',
-  polygon: 'Polygon',
-  solana: 'Solana',
-}
 
 const creators = [
   { id: 'creator_lia', name: 'Lia Montenegro' },
@@ -70,7 +66,7 @@ const featuredSeeds: readonly NftSeed[] = [
     name: 'Emerald Ape #042',
     character: 0,
     cents: 119,
-    rarity: 'common',
+    rarity: 'rare',
     collection: 'arte-digital',
     network: 'ethereum',
   },
@@ -182,13 +178,18 @@ const HOUR_MS = 3_600_000
 const NEW_COUNT = 12
 const TRENDING_COUNT = 16
 const SOLD_OUT_INDEXES: ReadonlySet<number> = new Set([11, 29])
-const LIMITED_SOLD_OUT_INDEXES: ReadonlySet<number> = new Set([3])
+const TENTH_SOLD_OUT_INDEXES: ReadonlySet<number> = new Set([3])
+const HEX = '0123456789abcdef'
+const BASE58 = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 
 const editionTemplates = [
-  { key: 'standard', label: 'Edição padrão', multiplier: 100, supply: 100 },
-  { key: 'limited', label: 'Edição limitada', multiplier: 150, supply: 25 },
-  { key: 'rare', label: 'Edição rara', multiplier: 300, supply: 5 },
+  { key: 'unique', label: '1/1', multiplier: 400, supply: 1 },
+  { key: 'tenth', label: '1/10', multiplier: 200, supply: 10 },
+  { key: 'fiftieth', label: '1/50', multiplier: 100, supply: 50 },
+  { key: 'open', label: 'ABERTA', multiplier: 50, supply: 500 },
 ] as const
+
+const DEFAULT_EDITION_KEY = 'fiftieth'
 
 function characterAt(index: number) {
   const character = characters.at(index % characters.length)
@@ -204,6 +205,14 @@ function creatorAt(index: number) {
     throw new Error('Creator fixtures are empty')
   }
   return creator
+}
+
+function randomString(rng: Rng, alphabet: string, length: number) {
+  return Array.from({ length }, () => alphabet.charAt(rng.int(0, alphabet.length - 1))).join('')
+}
+
+function buildContractAddress(network: Network, rng: Rng) {
+  return network === 'solana' ? randomString(rng, BASE58, 44) : `0x${randomString(rng, HEX, 40)}`
 }
 
 function buildGeneratedSeeds(rng: Rng): NftSeed[] {
@@ -235,59 +244,77 @@ function buildGeneratedSeeds(rng: Rng): NftSeed[] {
 }
 
 function buildEditions(id: string, index: number, cents: number, rng: Rng): Edition[] {
-  const count = index < featuredSeeds.length ? 2 : rng.int(1, 3)
+  const allEditions = index < featuredSeeds.length
 
-  return editionTemplates.slice(0, count).map((template) => {
-    const soldOut =
-      SOLD_OUT_INDEXES.has(index) ||
-      (template.key === 'limited' && LIMITED_SOLD_OUT_INDEXES.has(index))
+  return editionTemplates
+    .filter((template) => {
+      const included = allEditions || template.key === DEFAULT_EDITION_KEY || rng.next() < 0.6
+      return included
+    })
+    .map((template) => {
+      const soldOut =
+        SOLD_OUT_INDEXES.has(index) ||
+        (template.key === 'tenth' && TENTH_SOLD_OUT_INDEXES.has(index))
 
-    return {
-      id: `${id}_${template.key}`,
-      label: template.label,
-      price: centsToEth(Math.round((cents * template.multiplier) / 100)),
-      supply: template.supply,
-      available: soldOut ? 0 : rng.int(1, template.supply),
-    }
-  })
+      return {
+        id: `${id}_${template.key}`,
+        label: template.label,
+        price: centsToEth(Math.round((cents * template.multiplier) / 100)),
+        supply: template.supply,
+        available: soldOut ? 0 : rng.int(1, template.supply),
+      }
+    })
 }
 
 function buildRecord(seed: NftSeed, index: number, rng: Rng): NftRecord {
   const id = `nft_${String(index + 1).padStart(3, '0')}`
   const main = characterAt(seed.character)
-  const second = characterAt(seed.character + 1)
-  const third = characterAt(seed.character + 2)
   const creator = creatorAt(index)
   const editions = buildEditions(id, index, seed.cents, rng)
-  const standard = editions[0]
-  if (!standard) {
-    throw new Error('Every NFT needs at least one edition')
+  const defaultEdition = editions.find((edition) => edition.id === `${id}_${DEFAULT_EDITION_KEY}`)
+  if (!defaultEdition) {
+    throw new Error('Every NFT needs a default edition')
   }
+
+  const networkLabel = networkLabels[seed.network]
+  const royaltyPercent = index === 0 ? 5 : rng.int(3, 10)
+  const ratingAverage = index === 0 ? 4.8 : (35 + rng.int(0, 14)) / 10
+  const ratingCount = index === 0 ? 19 : rng.int(3, 60)
+  const contractAddress =
+    index === 0
+      ? '0x7A42c8f1d0b9E36A5c4f7d2B8e19a0C3D5b619E8'
+      : buildContractAddress(seed.network, rng)
+  const tokenNumber = /#(\d+)/.exec(seed.name)?.[1] ?? String(index + 1)
 
   return {
     id,
     name: seed.name,
     image: { url: main.image, alt: main.alt },
-    price: standard.price,
+    price: defaultEdition.price,
     originalPrice: seed.originalCents ? centsToEth(seed.originalCents) : null,
     rarity: seed.rarity,
     collection: seed.collection,
     network: seed.network,
     available: editions.reduce((total, edition) => total + edition.available, 0),
     version: 1,
-    description: `${seed.name} é uma peça de ${collectionLabels[seed.collection]} criada por ${creator.name} e cunhada na rede ${networkLabels[seed.network]}.`,
+    tokenId: `#${tokenNumber.padStart(4, '0')}`,
+    collectionName: main.collectionName,
+    summary: `Um colecionável digital finalizado à mão da coleção ${main.collectionName}, verificado na ${networkLabel}, com arte desbloqueável e acesso para colecionadores.`,
+    description: [
+      `${seed.name} é uma obra digital finalizada à mão da coleção ${main.collectionName}. Cada atributo fica armazenado nos metadados do token e verificado na ${networkLabel}. A obra explora identidade, movimento e luz em um mundo digital sem fronteiras.`,
+      `A propriedade inclui a arte em alta resolução, lançamentos exclusivos para colecionadores e um registro permanente de procedência registrada na rede. ${creator.name} recebe ${royaltyPercent}% de direitos autorais nas vendas secundárias, apoiando novos trabalhos e lançamentos da comunidade.`,
+    ],
+    attributes: [...main.attributes, ...(seed.rarity === 'rare' ? ['Raro'] : [])],
     creator,
-    gallery: [
-      { url: main.image, alt: main.alt },
-      { url: second.image, alt: second.alt },
-      { url: third.image, alt: third.alt },
-    ],
+    gallery: [0, 1, 2, 3].map((offset) => {
+      const character = characterAt(seed.character + offset)
+      return { url: character.image, alt: character.alt }
+    }),
     editions,
-    tags: [
-      collectionLabels[seed.collection],
-      networkLabels[seed.network],
-      ...(seed.rarity === 'rare' ? ['Raro'] : []),
-    ],
+    defaultEditionId: defaultEdition.id,
+    rating: { average: ratingAverage, count: ratingCount },
+    contractAddress,
+    royaltyPercent,
     listedAt: new Date(BASE_LISTING_TIME - index * 7 * HOUR_MS).toISOString(),
     popularity: rng.int(0, 1000),
     isNew: index < NEW_COUNT,

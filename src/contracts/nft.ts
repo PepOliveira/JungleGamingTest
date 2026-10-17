@@ -54,11 +54,21 @@ export const nftSummarySchema = z.object({
 export type NftSummary = z.infer<typeof nftSummarySchema>
 
 export const nftDetailSchema = nftSummarySchema.extend({
-  description: z.string(),
+  tokenId: z.string(),
+  collectionName: z.string(),
+  summary: z.string(),
+  description: z.array(z.string()).min(1),
+  attributes: z.array(z.string()),
   creator: z.object({ id: idSchema, name: z.string() }),
   gallery: z.array(imageSchema).min(1),
   editions: z.array(editionSchema).min(1),
-  tags: z.array(z.string()),
+  defaultEditionId: idSchema,
+  rating: z.object({
+    average: z.number().min(0).max(5),
+    count: z.number().int().nonnegative(),
+  }),
+  contractAddress: z.string().min(1),
+  royaltyPercent: z.number().min(0).max(100),
 })
 export type NftDetail = z.infer<typeof nftDetailSchema>
 
@@ -92,3 +102,6 @@ export const featuredNftsResponseSchema = z.object({
   items: z.array(nftSummarySchema),
 })
 export type FeaturedNftsResponse = z.infer<typeof featuredNftsResponseSchema>
+
+export const relatedNftsResponseSchema = featuredNftsResponseSchema
+export type RelatedNftsResponse = FeaturedNftsResponse

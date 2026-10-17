@@ -1,7 +1,8 @@
-import { Link } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { LogIn, ShoppingCart } from 'lucide-react'
 import type { ReactNode } from 'react'
 import { primaryNavigation } from '@/shared/config/navigation'
+import { cn } from '@/shared/lib/utils'
 import { Button } from '@/shared/ui/button'
 import { Logo } from './logo'
 import { UnavailableLink } from './unavailable-link'
@@ -17,6 +18,9 @@ const navLinkClass =
 const navLinkActiveClass = 'border-primary text-primary'
 
 export function SiteHeader({ cartCount, searchSlot }: SiteHeaderProps) {
+  const pathname = useRouterState({ select: (state) => state.location.pathname })
+  const onMarketPage = pathname.startsWith('/nfts/')
+
   return (
     <header className="hidden border-b border-border md:block">
       <div className="mx-auto flex h-[68px] w-full max-w-[1200px] items-center justify-between px-6">
@@ -35,7 +39,10 @@ export function SiteHeader({ cartCount, searchSlot }: SiteHeaderProps) {
               key={item.secao}
               secao={item.secao}
               activeProps={{ className: navLinkActiveClass }}
-              className={navLinkClass}
+              className={cn(
+                navLinkClass,
+                item.secao === 'mercado' && onMarketPage && navLinkActiveClass,
+              )}
             >
               {item.label}
             </UnavailableLink>

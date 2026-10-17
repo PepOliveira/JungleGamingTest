@@ -1,14 +1,28 @@
 import { http, HttpResponse } from 'msw'
 import { endpoints } from '@/contracts/endpoints'
 import { nftListQuerySchema } from '@/contracts/nft'
-import type { FeaturedNftsResponse, NftDetail, NftListResponse } from '@/contracts/nft'
+import type {
+  FeaturedNftsResponse,
+  NftDetail,
+  NftListResponse,
+  RelatedNftsResponse,
+} from '@/contracts/nft'
 import { apiUrl } from '../config'
 import { getDb } from '../db/store'
-import { buildFacets, filterNfts, paginate, sortNfts, toDetail, toSummary } from '../domain/catalog'
+import {
+  buildFacets,
+  filterNfts,
+  paginate,
+  relatedNfts,
+  sortNfts,
+  toDetail,
+  toSummary,
+} from '../domain/catalog'
 import { errorResponse } from '../utils/errors'
 import { simulateLatency } from '../utils/latency'
 
 const FEATURED_COUNT = 4
+const RELATED_COUNT = 12
 
 function parseListQuery(url: URL) {
   const params = url.searchParams
@@ -83,6 +97,22 @@ export const nftHandlers = [
     }
 
     const body: NftDetail = toDetail(nft)
+    return HttpResponse.json(body)
+  }),
+
+  http.get(apiUrl(`${endpoints.nfts.list}/:id/related`), async ({ params }) => {
+    await simulateLatency()
+
+    const { nfts } = getDb()
+    const id = String(params.id)
+    const nft = nfts.find((candidate) => candidate.id === id)
+    if (!nft) {
+      return errorResponse(404, 'not_found', 'NFT não encontrado')
+    }
+
+    const body: RelatedNftsResponse = {
+      items: relatedNfts(nfts, nft, RELATED_COUNT).map(toSummary),
+    }
     return HttpResponse.json(body)
   }),
 ]

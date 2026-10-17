@@ -4,12 +4,22 @@ import type { NftDetail, NftFacets, NftListQuery, NftSummary } from '@/contracts
 import { networkSchema } from '@/contracts/common'
 import { ethCompare } from '@/shared/lib/eth'
 import type { NftRecord } from '../db/types'
+import { collectionLabels, networkLabels } from '../fixtures/labels'
 import { normalizeText } from '../utils/text'
 
 type OmittedFilter = 'collections' | 'networks'
 
 function matchesTerm(nft: NftRecord, term: string) {
-  const haystack = normalizeText([nft.name, nft.creator.name, ...nft.tags].join(' '))
+  const haystack = normalizeText(
+    [
+      nft.name,
+      nft.creator.name,
+      nft.collectionName,
+      collectionLabels[nft.collection],
+      networkLabels[nft.network],
+      ...nft.attributes,
+    ].join(' '),
+  )
   return haystack.includes(term)
 }
 
@@ -118,10 +128,32 @@ export function toSummary(nft: NftRecord): NftSummary {
 export function toDetail(nft: NftRecord): NftDetail {
   return {
     ...toSummary(nft),
+    tokenId: nft.tokenId,
+    collectionName: nft.collectionName,
+    summary: nft.summary,
     description: nft.description,
+    attributes: nft.attributes,
     creator: nft.creator,
     gallery: nft.gallery,
     editions: nft.editions,
-    tags: nft.tags,
+    defaultEditionId: nft.defaultEditionId,
+    rating: nft.rating,
+    contractAddress: nft.contractAddress,
+    royaltyPercent: nft.royaltyPercent,
   }
+}
+
+export function relatedNfts(
+  nfts: readonly NftRecord[],
+  nft: NftRecord,
+  limit: number,
+): NftRecord[] {
+  const score = (candidate: NftRecord) =>
+    (candidate.collectionName === nft.collectionName ? 2 : 0) +
+    (candidate.collection === nft.collection ? 1 : 0)
+
+  return nfts
+    .filter((candidate) => candidate.id !== nft.id)
+    .sort((a, b) => score(b) - score(a) || b.popularity - a.popularity || a.id.localeCompare(b.id))
+    .slice(0, limit)
 }

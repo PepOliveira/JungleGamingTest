@@ -1,10 +1,15 @@
 import { createRootRouteWithContext } from '@tanstack/react-router'
 import type { RouterContext } from '@/app/router-context'
+import { AuthDialog } from '@/features/auth/components/auth-dialog'
+import { HeaderAccount } from '@/features/auth/components/header-account'
+import { MobileProfileTab } from '@/features/auth/components/mobile-profile-tab'
+import { authSearchSchema } from '@/features/auth/search'
 import { SearchDialog } from '@/features/catalog/components/search-dialog'
 import { AppShell } from '@/shared/layout/app-shell'
 import { StatusPage } from '@/shared/layout/status-page'
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  validateSearch: authSearchSchema,
   component: RootLayout,
   notFoundComponent: () => (
     <StatusPage
@@ -16,5 +21,12 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 })
 
 function RootLayout() {
-  return <AppShell headerSearch={<SearchDialog />} />
+  return (
+    <AppShell
+      headerSearch={<SearchDialog />}
+      headerAccount={<HeaderAccount />}
+      mobileProfile={<MobileProfileTab />}
+      overlays={<AuthDialog />}
+    />
+  )
 }

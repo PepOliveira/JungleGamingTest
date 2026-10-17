@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { Heart, Home, ScanLine, ShoppingCart, User } from 'lucide-react'
+import { Heart, Home, ScanLine, ShoppingCart } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { cn } from '@/shared/lib/utils'
 import { UnavailableLink } from './unavailable-link'
 
@@ -7,7 +8,11 @@ const tabClass =
   'absolute top-[50px] flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-warm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring'
 const tabActiveClass = 'text-primary'
 
-export function MobileTabBar() {
+type MobileTabBarProps = {
+  profileSlot: ReactNode
+}
+
+export function MobileTabBar({ profileSlot }: MobileTabBarProps) {
   return (
     <nav aria-label="Navegação principal" className="fixed inset-x-0 bottom-0 z-40 md:hidden">
       <div className="relative h-[88px]">
@@ -47,14 +52,9 @@ export function MobileTabBar() {
           <ShoppingCart className="size-[18px]" aria-hidden="true" />
           <span className="sr-only">Carrinho</span>
         </UnavailableLink>
-        <UnavailableLink
-          secao="perfil"
-          activeProps={{ className: tabActiveClass }}
-          className={cn(tabClass, 'left-[87.7%]')}
-        >
-          <User className="size-[18px]" fill="currentColor" aria-hidden="true" />
-          <span className="sr-only">Perfil</span>
-        </UnavailableLink>
+        <div className="absolute top-[50px] left-[87.7%] -translate-x-1/2 -translate-y-1/2">
+          {profileSlot}
+        </div>
 
         <UnavailableLink
           secao="escanear"

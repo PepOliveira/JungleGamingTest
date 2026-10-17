@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
-import { LogIn, Search, ShoppingCart } from 'lucide-react'
+import { LogIn, ShoppingCart } from 'lucide-react'
+import type { ReactNode } from 'react'
 import { primaryNavigation } from '@/shared/config/navigation'
 import { Button } from '@/shared/ui/button'
 import { Logo } from './logo'
@@ -7,6 +8,7 @@ import { UnavailableLink } from './unavailable-link'
 
 type SiteHeaderProps = {
   cartCount: number
+  searchSlot: ReactNode
 }
 
 const navLinkClass =
@@ -14,7 +16,7 @@ const navLinkClass =
 
 const navLinkActiveClass = 'border-primary text-primary'
 
-export function SiteHeader({ cartCount }: SiteHeaderProps) {
+export function SiteHeader({ cartCount, searchSlot }: SiteHeaderProps) {
   return (
     <header className="hidden border-b border-border md:block">
       <div className="mx-auto flex h-[68px] w-full max-w-[1200px] items-center justify-between px-6">
@@ -22,7 +24,7 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
         <nav aria-label="Principal" className="flex h-full items-center gap-10">
           <Link
             to="/"
-            activeOptions={{ exact: true }}
+            activeOptions={{ exact: true, includeSearch: false }}
             activeProps={{ className: navLinkActiveClass }}
             className={navLinkClass}
           >
@@ -40,13 +42,7 @@ export function SiteHeader({ cartCount }: SiteHeaderProps) {
           ))}
         </nav>
         <div className="flex items-center gap-4">
-          <UnavailableLink
-            secao="busca"
-            aria-label="Buscar"
-            className="rounded-sm p-1 text-foreground transition-colors hover:text-primary"
-          >
-            <Search className="size-5" aria-hidden="true" />
-          </UnavailableLink>
+          {searchSlot}
           <UnavailableLink
             secao="carrinho"
             aria-label={`Carrinho, ${cartCount} ${cartCount === 1 ? 'item' : 'itens'}`}

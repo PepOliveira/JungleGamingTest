@@ -9,19 +9,19 @@ type Character = { image: string; alt: string }
 
 const characters: readonly Character[] = [
   {
-    image: '/assets/nfts/emerald-ape.png',
+    image: '/assets/nfts/emerald-ape-640.webp',
     alt: 'Macaco marrom de óculos redondos e jaqueta verde',
   },
   {
-    image: '/assets/nfts/sage-nomad.png',
+    image: '/assets/nfts/sage-nomad-640.webp',
     alt: 'Macaco cinza com chapéu verde e moletom roxo',
   },
   {
-    image: '/assets/nfts/neon-vessel.png',
+    image: '/assets/nfts/neon-vessel-640.webp',
     alt: 'Macaco preto com brinco dourado e gola alta verde',
   },
   {
-    image: '/assets/nfts/golden-beat.png',
+    image: '/assets/nfts/golden-beat-640.webp',
     alt: 'Macaco dourado com fones de ouvido verdes',
   },
 ]

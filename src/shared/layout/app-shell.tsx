@@ -1,9 +1,14 @@
 import { Outlet } from '@tanstack/react-router'
+import type { ReactNode } from 'react'
 import { MobileTabBar } from './mobile-tab-bar'
 import { SiteFooter } from './site-footer'
 import { SiteHeader } from './site-header'
 
-export function AppShell() {
+type AppShellProps = {
+  headerSearch: ReactNode
+}
+
+export function AppShell({ headerSearch }: AppShellProps) {
   return (
     <div className="flex min-h-dvh flex-col">
       <a
@@ -12,7 +17,7 @@ export function AppShell() {
       >
         Pular para o conteúdo
       </a>
-      <SiteHeader cartCount={0} />
+      <SiteHeader cartCount={0} searchSlot={headerSearch} />
       <main id="conteudo" tabIndex={-1} className="flex-1 outline-none">
         <Outlet />
       </main>

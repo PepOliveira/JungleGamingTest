@@ -1,9 +1,11 @@
-import { createRootRoute } from '@tanstack/react-router'
+import { createRootRouteWithContext } from '@tanstack/react-router'
+import type { RouterContext } from '@/app/router-context'
+import { SearchDialog } from '@/features/catalog/components/search-dialog'
 import { AppShell } from '@/shared/layout/app-shell'
 import { StatusPage } from '@/shared/layout/status-page'
 
-export const Route = createRootRoute({
-  component: AppShell,
+export const Route = createRootRouteWithContext<RouterContext>()({
+  component: RootLayout,
   notFoundComponent: () => (
     <StatusPage
       code="404"
@@ -12,3 +14,7 @@ export const Route = createRootRoute({
     />
   ),
 })
+
+function RootLayout() {
+  return <AppShell headerSearch={<SearchDialog />} />
+}

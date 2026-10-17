@@ -1,13 +1,24 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, stripSearchParams } from '@tanstack/react-router'
+import {
+  featuredNftsQueryOptions,
+  nftListQueryOptions,
+} from '@/features/catalog/api/catalog-queries'
+import { CatalogPage } from '@/features/catalog/components/catalog-page'
+import {
+  catalogSearchDefaults,
+  catalogSearchSchema,
+  normalizeCatalogSearch,
+  toListQuery,
+} from '@/features/catalog/search'
 
 export const Route = createFileRoute('/')({
-  component: HomePage,
+  validateSearch: catalogSearchSchema,
+  search: { middlewares: [stripSearchParams(catalogSearchDefaults)] },
+  loaderDeps: ({ search }) => ({ search }),
+  loader: ({ context, deps }) => {
+    const query = toListQuery(normalizeCatalogSearch(deps.search))
+    void context.queryClient.prefetchQuery(nftListQueryOptions(query))
+    void context.queryClient.prefetchQuery(featuredNftsQueryOptions())
+  },
+  component: CatalogPage,
 })
-
-function HomePage() {
-  return (
-    <div className="mx-auto w-full max-w-[1200px] px-6 py-16">
-      <h1 className="text-2xl font-bold tracking-wide uppercase">Início</h1>
-    </div>
-  )
-}

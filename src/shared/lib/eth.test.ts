@@ -5,7 +5,9 @@ import {
   ethEquals,
   ethIsZero,
   ethMultiply,
+  ethFromCents,
   ethSub,
+  ethToCents,
   ethSum,
   formatEth,
   formatEthWithSymbol,
@@ -77,5 +79,19 @@ describe('eth input parsing', () => {
     expect(parseEthInput('-1')).toBeNull()
     expect(parseEthInput('1.0000000000000000001')).toBeNull()
     expect(parseEthInput('')).toBeNull()
+  })
+})
+
+describe('eth cents conversion', () => {
+  it('converts amounts to integer cents', () => {
+    expect(ethToCents('0.02')).toBe(2)
+    expect(ethToCents('12.30')).toBe(1230)
+    expect(ethToCents('1.999')).toBe(199)
+  })
+
+  it('converts cents back to amounts', () => {
+    expect(ethFromCents(2)).toBe('0.02')
+    expect(ethFromCents(1230)).toBe('12.3')
+    expect(() => ethFromCents(1.5)).toThrow(RangeError)
   })
 })

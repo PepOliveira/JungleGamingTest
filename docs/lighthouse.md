@@ -35,12 +35,12 @@ Os mesmos dados, com data da execução, estão em `docs/lighthouse-results.json
 
 | Página  | Perfil  | Performance | Acessibilidade | Boas práticas | SEO | LCP     | CLS   | TBT    |
 | ------- | ------- | ----------- | -------------- | ------------- | --- | ------- | ----- | ------ |
-| home    | desktop | 96          | 98             | 100           | 100 | 1252 ms | 0.013 | 0 ms   |
-| detalhe | desktop | 96          | 100            | 100           | 100 | 1214 ms | 0.000 | 0 ms   |
-| home    | mobile  | **71**      | 100            | 100           | 100 | 5208 ms | 0.020 | 138 ms |
-| detalhe | mobile  | **73**      | 100            | 100           | 100 | 4755 ms | 0.000 | 136 ms |
+| home    | desktop | 96          | 98             | 100           | 100 | 1248 ms | 0.020 | 0 ms   |
+| detalhe | desktop | 96          | 100            | 100           | 100 | 1232 ms | 0.000 | 0 ms   |
+| home    | mobile  | **71**      | 100            | 100           | 100 | 5211 ms | 0.019 | 128 ms |
+| detalhe | mobile  | **74**      | 100            | 100           | 100 | 4899 ms | 0.000 | 110 ms |
 
-**Desktop atende às quatro metas. No mobile, Acessibilidade, Boas práticas e SEO atendem; Performance fica abaixo de 90** (71 e 73). CLS e TBT estão excelentes nos dois perfis; o que reprova o mobile é o LCP.
+**Desktop atende às quatro metas. No mobile, Acessibilidade, Boas práticas e SEO atendem; Performance fica abaixo de 90** (71 e 74). CLS e TBT estão excelentes nos dois perfis; o que reprova o mobile é o LCP.
 
 ## Por que o mobile não chega a 90
 

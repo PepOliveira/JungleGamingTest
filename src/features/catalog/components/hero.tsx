@@ -9,7 +9,7 @@ import { Skeleton } from '@/shared/ui/skeleton'
 import { featuredNftsQueryOptions } from '../api/catalog-queries'
 
 const SLIDE_COUNT = 3
-const HERO_SIZES = '(min-width: 768px) 480px, 150px'
+const HERO_SIZES = '(min-width: 768px) 450px, 150px'
 
 export function Hero() {
   const { data, isPending } = useQuery(featuredNftsQueryOptions())
@@ -33,7 +33,7 @@ export function Hero() {
         <p className="text-[11px] text-foreground md:text-sm">Bem-vindo à Kurio</p>
         <h1
           id="hero-title"
-          className="text-[17px] leading-snug font-bold uppercase md:text-4xl md:leading-snug"
+          className="text-[17px] leading-snug font-bold uppercase md:max-w-[520px] md:text-4xl md:leading-snug"
         >
           <span className="md:hidden">Seja dono da cultura digital</span>
           <span className="hidden md:inline">Seja dono do futuro da arte digital</span>
@@ -86,7 +86,7 @@ export function Hero() {
         </div>
       ) : null}
 
-      <div className="relative w-[150px] md:w-full md:max-w-[480px] md:justify-self-end">
+      <div className="relative w-[150px] md:w-full md:max-w-[450px] md:justify-self-end">
         {isPending || !current ? (
           <Skeleton className="aspect-square rounded-2xl bg-secondary md:rounded-3xl" />
         ) : (

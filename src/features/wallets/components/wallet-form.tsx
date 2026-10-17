@@ -112,7 +112,7 @@ export function WalletForm({ kind, wallet, mirrorOf, user, onSaved }: WalletForm
   return (
     <form noValidate onSubmit={onSubmit} className="flex flex-col gap-8">
       <input type="hidden" {...form.register('kind')} />
-      <div className="grid gap-x-10 gap-y-6 lg:grid-cols-2">
+      <div className="grid gap-x-10 gap-y-6 lg:grid-cols-2 lg:gap-x-7">
         <div className="flex flex-col gap-6">
           <TextField
             label="Nome de exibição"

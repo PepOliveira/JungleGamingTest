@@ -24,7 +24,7 @@ export function CartItemRow({ item }: CartItemRowProps) {
       to="/nfts/$nftId"
       params={{ nftId: item.nftId }}
       aria-label={`Ver ${item.name}`}
-      className="block aspect-square overflow-hidden rounded-lg bg-canvas outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      className="block aspect-square overflow-hidden rounded-lg bg-canvas outline-none focus-visible:ring-2 focus-visible:ring-ring lg:rounded-none"
     >
       <ResponsiveImage image={item.image} sizes="84px" />
     </Link>
@@ -55,24 +55,24 @@ export function CartItemRow({ item }: CartItemRowProps) {
   )
 
   return (
-    <li className="relative rounded-xl bg-card p-3 lg:rounded-lg lg:py-2">
-      <div className="grid grid-cols-[84px_minmax(0,1fr)] gap-x-4 lg:hidden">
+    <li className="relative overflow-hidden rounded-xl bg-card p-0 pr-3 lg:rounded-lg">
+      <div className="grid grid-cols-[100px_minmax(0,1fr)] gap-x-4 lg:hidden">
         <div className="row-span-2 self-start">{thumbnail}</div>
-        <div className="min-w-0 pr-9">
+        <div className="min-w-0 pt-3 pr-9">
           <h3 className="truncate text-sm font-bold">{item.name}</h3>
-          <p className="mt-1 text-xs text-muted-foreground">Edição: {item.editionLabel}</p>
+          <p className="mt-1 text-sm text-muted-foreground">Edição: {item.editionLabel}</p>
         </div>
-        <div className="flex items-end justify-between gap-2 self-end">
-          <p className="text-base font-bold text-primary-bright">
+        <div className="flex items-end justify-between gap-2 self-end pb-3">
+          <p className="text-lg font-bold text-primary-bright">
             <span className="sr-only">Total do item </span>
             {formatEthWithSymbol(item.lineTotal)}
           </p>
           {quantity}
         </div>
-        <div className="absolute top-3 right-3">{trash}</div>
+        <div className="absolute top-2 right-2">{trash}</div>
       </div>
 
-      <div className="hidden grid-cols-[minmax(0,2.2fr)_1fr_1.2fr_1fr_40px] items-center lg:grid">
+      <div className="hidden grid-cols-[311px_139px_136px_minmax(0,1fr)_40px] items-center lg:grid">
         <div className="flex min-w-0 items-center gap-4">
           <div className="w-[70px] shrink-0">{thumbnail}</div>
           <div className="min-w-0">
@@ -95,7 +95,7 @@ export function CartItemRow({ item }: CartItemRowProps) {
       {soldOut || exceeds ? (
         <p
           role="alert"
-          className="mt-3 rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive"
+          className="mt-3 rounded-md bg-destructive/10 px-3 py-2 text-xs text-destructive lg:mx-3 lg:mb-3"
         >
           {soldOut
             ? 'Esta edição esgotou. Remova o item para continuar.'

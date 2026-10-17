@@ -1,6 +1,6 @@
 {
   "meta": {
-    "generatedAt": "2026-10-17T02:26:22.934Z",
+    "generatedAt": "2026-10-17T23:18:06.375Z",
     "runsPerCombination": 3,
     "targets": {
       "performance": 90,
@@ -38,9 +38,9 @@
         "seo": 100
       },
       "metrics": {
-        "LCP": 5208,
-        "CLS": 0.01981013587286395,
-        "TBT": 137.5
+        "LCP": 5210.633000000002,
+        "CLS": 0.01878620925201241,
+        "TBT": 128.5
       },
       "passed": false,
       "runs": 3
@@ -55,8 +55,8 @@
         "seo": 100
       },
       "metrics": {
-        "LCP": 1252,
-        "CLS": 0.013404662225946946,
+        "LCP": 1248,
+        "CLS": 0.019609933778688665,
         "TBT": 0
       },
       "passed": true,
@@ -66,15 +66,15 @@
       "page": "detalhe",
       "profile": "mobile",
       "scores": {
-        "performance": 73,
+        "performance": 74,
         "accessibility": 100,
         "best-practices": 100,
         "seo": 100
       },
       "metrics": {
-        "LCP": 4755.165,
+        "LCP": 4899,
         "CLS": 0,
-        "TBT": 136
+        "TBT": 110
       },
       "passed": false,
       "runs": 3
@@ -89,8 +89,8 @@
         "seo": 100
       },
       "metrics": {
-        "LCP": 1214,
-        "CLS": 0.0002219205209958983,
+        "LCP": 1232,
+        "CLS": 0.0003010076903034487,
         "TBT": 0
       },
       "passed": true,

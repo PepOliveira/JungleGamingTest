@@ -62,7 +62,7 @@ export function PromoCodeForm({ couponCode, disabled }: PromoCodeFormProps) {
 
   return (
     <form noValidate onSubmit={handleSubmit} className="flex flex-col gap-2">
-      <label htmlFor={inputId} className="text-sm font-bold">
+      <label htmlFor={inputId} className="text-sm font-bold max-lg:sr-only">
         Código promocional
       </label>
       <div className="flex">

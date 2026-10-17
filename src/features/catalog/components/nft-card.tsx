@@ -46,7 +46,7 @@ export function NftCard({ nft, priority = false, className }: NftCardProps) {
         </div>
         <div className="flex flex-col gap-1 px-1">
           <h3 className="text-sm text-foreground">{nft.name}</h3>
-          <p className="flex flex-wrap items-baseline gap-x-2 text-sm font-bold text-primary-bright">
+          <p className="flex flex-wrap items-baseline gap-x-2 text-sm font-bold text-primary-bright max-md:text-base">
             <span>{formatEthWithSymbol(nft.price)}</span>
             {nft.originalPrice ? (
               <span className="font-normal text-muted-foreground line-through">

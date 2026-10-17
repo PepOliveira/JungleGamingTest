@@ -44,7 +44,7 @@ const collectorSchema = z.object({
 
 const DEFAULT_PROVIDER: WalletProvider = 'metamask'
 
-const containerClass = 'mx-auto w-full max-w-[1200px] px-4 pb-48 lg:px-6 lg:pt-8 lg:pb-16'
+const containerClass = 'mx-auto w-full max-w-[1248px] px-7 pb-48 lg:px-6 lg:pt-8 lg:pb-16'
 
 function Header() {
   const router = useRouter()
@@ -306,7 +306,7 @@ function CheckoutContent({ cart, profile, wallets }: CheckoutContentProps) {
         id="checkout-form"
         noValidate
         onSubmit={onSubmit}
-        className="flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_405px] lg:items-start lg:gap-12"
+        className="flex flex-col gap-8 lg:grid lg:grid-cols-[minmax(0,1fr)_405px] lg:items-start lg:gap-8"
       >
         <div className="max-lg:contents lg:flex lg:flex-col lg:gap-10">
           <div className="max-lg:order-3">

@@ -84,8 +84,8 @@ export function ProfileForm({ user }: ProfileFormProps) {
   })
 
   return (
-    <form noValidate onSubmit={onSubmit} className="flex flex-col gap-10">
-      <div className="grid gap-x-10 gap-y-6 lg:grid-cols-2">
+    <form noValidate onSubmit={onSubmit} className="flex flex-col gap-6 lg:gap-8">
+      <div className="grid gap-x-10 gap-y-6 lg:grid-cols-2 lg:gap-x-7">
         <div className="flex flex-col gap-6">
           <TextField
             label="Nome de exibição"
@@ -131,7 +131,7 @@ export function ProfileForm({ user }: ProfileFormProps) {
 
       <section
         aria-labelledby="password-title"
-        className="flex flex-col gap-6 lg:max-w-[calc(50%-1.25rem)]"
+        className="flex flex-col gap-6 lg:max-w-[calc(50%-0.875rem)]"
       >
         <h2 id="password-title" className="text-base font-bold">
           Alterar senha

@@ -3,7 +3,7 @@ import { FaFacebookF } from 'react-icons/fa6'
 import { FcGoogle } from 'react-icons/fc'
 
 const buttonClass =
-  'flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-border bg-transparent text-xs font-bold text-warm transition-colors outline-none hover:border-primary focus-visible:ring-2 focus-visible:ring-ring md:h-10 md:rounded-sm'
+  'flex h-10 w-full items-center justify-center gap-3 rounded-sm border border-border bg-transparent text-xs font-bold text-warm transition-colors outline-none hover:border-primary focus-visible:ring-2 focus-visible:ring-ring max-md:text-sm'
 
 export function SocialButtons() {
   const [notice, setNotice] = useState<string | null>(null)

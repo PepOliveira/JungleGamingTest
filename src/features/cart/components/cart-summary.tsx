@@ -41,10 +41,10 @@ export function CartSummary({ cart, hasBlockingItems }: CartSummaryProps) {
   }
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-5 lg:gap-0">
       <PromoCodeForm couponCode={cart.couponCode} disabled={empty} />
 
-      <dl className="flex flex-col gap-3">
+      <dl className="flex flex-col gap-3 lg:mt-3 lg:gap-2.5">
         <SummaryLine label="Subtotal" value={`${formatEth(summary.subtotal)} ETH`} />
         <SummaryLine label="Desconto do lançamento" value={`(-) ${formatEth(summary.discount)}`} />
         <SummaryLine

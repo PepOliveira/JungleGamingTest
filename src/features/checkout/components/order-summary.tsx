@@ -37,20 +37,24 @@ export function OrderSummary({ cart, quote, loading }: OrderSummaryProps) {
 
       <ul className="flex flex-col gap-2">
         {cart.items.map((item) => (
-          <li key={item.id} className="flex items-center gap-3 rounded-lg bg-card p-2">
-            <div className="size-[60px] shrink-0 overflow-hidden rounded-md bg-canvas">
+          <li
+            key={item.id}
+            className="flex items-center gap-3 overflow-hidden rounded-lg bg-card p-2 lg:p-0 lg:pr-3"
+          >
+            <div className="size-[60px] shrink-0 overflow-hidden rounded-md bg-canvas lg:size-[70px] lg:rounded-none">
               <ResponsiveImage image={item.image} sizes="60px" />
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-bold">{item.name}</p>
               <p className="text-xs text-muted-foreground">
-                ID do token: {item.tokenId} · {item.editionLabel}
+                ID do token: {item.tokenId}
+                <span className="lg:hidden"> · {item.editionLabel}</span>
               </p>
             </div>
             <p className="shrink-0 text-xs text-muted-foreground">
               <span className="sr-only">Quantidade </span>(x {item.quantity})
             </p>
-            <p className="shrink-0 text-sm font-bold text-primary-bright">
+            <p className="shrink-0 text-sm font-bold text-primary-bright lg:text-base">
               <span className="sr-only">Subtotal </span>
               {formatEthWithSymbol(item.lineTotal)}
             </p>

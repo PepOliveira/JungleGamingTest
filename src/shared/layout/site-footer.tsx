@@ -32,7 +32,7 @@ const socialIcons: Record<(typeof socialLinks)[number]['label'], IconType> = {
 
 export function SiteFooter() {
   return (
-    <footer className="mt-16 pb-28 md:pb-0">
+    <footer className="mt-16 pb-32 md:pb-0">
       <div className="mx-auto w-full max-w-[1200px] px-6">
         <div className="grid gap-8 rounded-t-lg bg-card p-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-0 lg:p-8">
           {benefits.map((benefit) => (

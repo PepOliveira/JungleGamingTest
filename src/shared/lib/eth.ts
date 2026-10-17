@@ -76,3 +76,14 @@ export function parseEthInput(raw: string): EthAmount | null {
   }
   return toAmount(toDecimal(normalized))
 }
+
+export function ethToCents(amount: EthAmount): number {
+  return toDecimal(amount).times(100).toDecimalPlaces(0, Decimal.ROUND_DOWN).toNumber()
+}
+
+export function ethFromCents(cents: number): EthAmount {
+  if (!Number.isSafeInteger(cents) || cents < 0) {
+    throw new RangeError('Os centavos devem ser um número inteiro não negativo')
+  }
+  return toAmount(new EthDecimal(cents).dividedBy(100))
+}

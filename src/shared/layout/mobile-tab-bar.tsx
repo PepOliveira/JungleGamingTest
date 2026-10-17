@@ -1,60 +1,70 @@
 import { Link } from '@tanstack/react-router'
 import { Heart, Home, ScanLine, ShoppingCart, User } from 'lucide-react'
+import { cn } from '@/shared/lib/utils'
 import { UnavailableLink } from './unavailable-link'
 
 const tabClass =
-  'flex flex-1 flex-col items-center justify-center gap-1 py-3 text-muted-foreground transition-colors'
+  'absolute top-[50px] flex size-12 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full text-warm transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring'
 const tabActiveClass = 'text-primary'
 
 export function MobileTabBar() {
   return (
-    <nav
-      aria-label="Navegação principal"
-      className="fixed inset-x-0 bottom-0 z-40 pb-[env(safe-area-inset-bottom)] md:hidden"
-    >
-      <div className="relative flex items-stretch rounded-t-[2rem] bg-card px-4">
+    <nav aria-label="Navegação principal" className="fixed inset-x-0 bottom-0 z-40 md:hidden">
+      <div className="relative h-[88px]">
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 flex drop-shadow-[0_-4px_12px_rgba(0,0,0,0.45)]"
+        >
+          <div className="flex-1 rounded-tl-[2rem] bg-card" />
+          <svg width="200" height="88" viewBox="0 0 200 88" className="shrink-0 fill-card">
+            <path d="M0,0 H28 C44,0 50,6 58,16 C70,34 84,46 100,46 C116,46 130,34 142,16 C150,6 156,0 172,0 H200 V88 H0 Z" />
+          </svg>
+          <div className="flex-1 rounded-tr-[2rem] bg-card" />
+        </div>
+
         <Link
           to="/"
-          activeOptions={{ exact: true }}
+          activeOptions={{ exact: true, includeSearch: false }}
           activeProps={{ className: tabActiveClass }}
-          className={tabClass}
+          className={cn(tabClass, 'left-[11%]')}
         >
-          <Home className="size-6" aria-hidden="true" />
+          <Home className="size-5" fill="currentColor" aria-hidden="true" />
           <span className="sr-only">Início</span>
         </Link>
         <UnavailableLink
           secao="favoritos"
           activeProps={{ className: tabActiveClass }}
-          className={tabClass}
+          className={cn(tabClass, 'left-[28.5%]')}
         >
-          <Heart className="size-6" aria-hidden="true" />
+          <Heart className="size-5" fill="currentColor" aria-hidden="true" />
           <span className="sr-only">Favoritos</span>
         </UnavailableLink>
-        <div className="w-20 shrink-0" aria-hidden="true" />
         <UnavailableLink
           secao="carrinho"
           activeProps={{ className: tabActiveClass }}
-          className={tabClass}
+          className={cn(tabClass, 'left-[72.7%]')}
         >
-          <ShoppingCart className="size-6" aria-hidden="true" />
+          <ShoppingCart className="size-[18px]" aria-hidden="true" />
           <span className="sr-only">Carrinho</span>
         </UnavailableLink>
         <UnavailableLink
           secao="perfil"
           activeProps={{ className: tabActiveClass }}
-          className={tabClass}
+          className={cn(tabClass, 'left-[87.7%]')}
         >
-          <User className="size-6" aria-hidden="true" />
+          <User className="size-[18px]" fill="currentColor" aria-hidden="true" />
           <span className="sr-only">Perfil</span>
         </UnavailableLink>
+
         <UnavailableLink
           secao="escanear"
           aria-label="Escanear código"
-          className="absolute -top-8 left-1/2 flex size-16 -translate-x-1/2 items-center justify-center rounded-full bg-gradient-to-b from-[#8c5c34] to-[#c38147] text-foreground ring-8 ring-background"
+          className="absolute top-[-26px] left-1/2 flex size-[66px] -translate-x-1/2 items-center justify-center rounded-full bg-gradient-to-b from-[#eaaa72] to-[#c98b55] text-canvas shadow-[0_8px_20px_rgba(0,0,0,0.55)] outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <ScanLine className="size-7" aria-hidden="true" />
         </UnavailableLink>
       </div>
+      <div className="h-[env(safe-area-inset-bottom)] bg-card" />
     </nav>
   )
 }

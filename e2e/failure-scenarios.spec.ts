@@ -67,14 +67,22 @@ test.describe('falhas de rede e de servidor', () => {
 test.describe('sessão expirada', () => {
   test('pede login novamente e mantém o destino', async ({ page, mocks, login }) => {
     await login()
-    await page.goto('/carrinho')
+    await page.goto('/nfts/nft_001')
+    await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     await mocks.expireSessions()
-    await page.reload()
+
+    await page.getByRole('button', { name: /^Comprar( NFT)?$/ }).click()
 
     const dialog = page.getByRole('dialog')
     await expect(dialog.getByText('Sua sessão expirou')).toBeVisible()
     await expect(page).toHaveURL(/motivo=sessao-expirada/)
-    await expect(page).toHaveURL(/retorno=/)
+    await expect(page).toHaveURL(/retorno=.*nfts/)
+
+    await dialog.getByPlaceholder('contato@email.com').fill('colecionador@kurio.dev')
+    await dialog.getByPlaceholder('Senha').fill('Kurio@123')
+    await dialog.getByRole('button', { name: 'Entrar', exact: true }).click()
+    await expect(dialog).toBeHidden()
+    await expect(page).toHaveURL(/\/nfts\/nft_001$/)
   })
 })
 

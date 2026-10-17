@@ -1,7 +1,7 @@
 import type { ApiErrorCode } from '@/contracts/errors'
 import { readStoredJson, removeStoredValue, writeStoredJson } from './db/storage'
 
-export type FaultEffect = 'status' | 'network' | 'timeout'
+export type FaultEffect = 'status' | 'network' | 'timeout' | 'delay'
 
 export type Fault = {
   method?: string
@@ -10,6 +10,7 @@ export type Fault = {
   status?: number
   code?: ApiErrorCode
   message?: string
+  delayMs?: number
   times?: number
 }
 

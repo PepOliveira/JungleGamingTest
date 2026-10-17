@@ -267,11 +267,14 @@ function CheckoutContent({ cart, profile, wallets }: CheckoutContentProps) {
       if (apiError.code === 'quote_outdated') {
         const next = quoteSchema.safeParse(apiError.details.quote)
         if (next.success) {
+          const unchanged = describeQuoteChange(quote, next.data).direction === 'same'
           replaceQuote(next.data)
-          announce('Os valores do pedido mudaram. Revise e confirme novamente.', {
-            visible: true,
-            tone: 'error',
-          })
+          announce(
+            unchanged
+              ? 'A cotação expirou e foi renovada. Confirme novamente.'
+              : 'Os valores do pedido mudaram. Revise e confirme novamente.',
+            { visible: true, tone: 'error' },
+          )
           return
         }
       }

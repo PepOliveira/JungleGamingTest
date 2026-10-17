@@ -11,6 +11,10 @@ export const faultHandlers = [
     if (fault.effect === 'network') {
       return HttpResponse.error()
     }
+    if (fault.effect === 'delay') {
+      await delay(fault.delayMs ?? 1500)
+      return undefined
+    }
     if (fault.effect === 'timeout') {
       await delay('infinite')
       return undefined

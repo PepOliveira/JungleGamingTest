@@ -11,12 +11,18 @@ export function LiveRegion() {
 
   return (
     <>
-      <p key={id} role="status" aria-live="polite" aria-atomic="true" className="sr-only">
+      <p
+        key={`status-${id}`}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
         {message}
       </p>
       {visible && message ? (
         <div
-          key={id}
+          key={`toast-${id}`}
           aria-hidden="true"
           className={cn(
             'toast pointer-events-none fixed top-4 left-1/2 lg:top-20 z-[60] max-w-[90vw] -translate-x-1/2 rounded-md border bg-card px-4 py-3 text-sm  shadow-lg',

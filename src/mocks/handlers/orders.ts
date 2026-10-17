@@ -3,8 +3,9 @@ import { IDEMPOTENCY_HEADER, endpoints } from '@/contracts/endpoints'
 import { createOrderRequestSchema, orderListQuerySchema } from '@/contracts/order'
 import { apiUrl } from '../config'
 import { getDb, updateDb } from '../db/store'
-import { createOrderRecord, orderFingerprint, settleOrder, toOrder } from '../domain/orders'
+import { createOrderRecord, orderFingerprint, toOrder } from '../domain/orders'
 import { buildQuote } from '../domain/quote'
+import { scheduleSettlement, settleDueOrders } from '../realtime/settlement'
 import { getScenario } from '../scenarios'
 import { authenticate } from '../utils/auth'
 import { errorResponse } from '../utils/errors'
@@ -13,17 +14,6 @@ import { simulateLatency } from '../utils/latency'
 import { fieldFailure, validationFailure } from '../utils/validation'
 
 const itemPath = `${endpoints.orders.list}/:orderId`
-
-function settleUserOrders(userId: string) {
-  updateDb((db) => {
-    const now = Date.now()
-    for (const order of db.orders) {
-      if (order.userId === userId) {
-        settleOrder(db, order, now)
-      }
-    }
-  })
-}
 
 export const orderHandlers = [
   http.post(apiUrl(endpoints.orders.create), async ({ request }) => {
@@ -57,7 +47,7 @@ export const orderHandlers = [
           'Esta chave de idempotência já foi usada com outro conteúdo',
         )
       }
-      settleUserOrders(userId)
+      settleDueOrders(userId)
       const existing = getDb().orders.find((order) => order.id === previous.orderId)
       if (existing) {
         return HttpResponse.json(toOrder(existing), { status: 200 })
@@ -137,6 +127,8 @@ export const orderHandlers = [
       state.idempotency[storageKey] = { fingerprint, orderId: order.id }
     })
 
+    scheduleSettlement(order.id)
+
     return HttpResponse.json(toOrder(order), { status: 201 })
   }),
 
@@ -152,7 +144,7 @@ export const orderHandlers = [
       return validationFailure(query.error.issues)
     }
 
-    settleUserOrders(result.user.id)
+    settleDueOrders(result.user.id)
     const items = getDb()
       .orders.filter((order) => order.userId === result.user.id)
       .filter((order) => !query.data.status || order.status === query.data.status)
@@ -168,7 +160,7 @@ export const orderHandlers = [
     const result = authenticate(request)
     if (result.error) return result.error
 
-    settleUserOrders(result.user.id)
+    settleDueOrders(result.user.id)
     const order = getDb().orders.find(
       (candidate) => candidate.id === String(params.orderId) && candidate.userId === result.user.id,
     )

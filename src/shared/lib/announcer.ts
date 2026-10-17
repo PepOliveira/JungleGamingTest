@@ -1,6 +1,18 @@
 type Listener = () => void
 
-let current = { id: 0, message: '' }
+export type Announcement = {
+  id: number
+  message: string
+  visible: boolean
+  tone: 'info' | 'error'
+}
+
+type AnnounceOptions = {
+  visible?: boolean
+  tone?: Announcement['tone']
+}
+
+let current: Announcement = { id: 0, message: '', visible: false, tone: 'info' }
 const listeners = new Set<Listener>()
 
 export const announcer = {
@@ -13,7 +25,10 @@ export const announcer = {
   },
 }
 
-export function announce(message: string) {
-  current = { id: current.id + 1, message }
+export function announce(
+  message: string,
+  { visible = false, tone = 'info' }: AnnounceOptions = {},
+) {
+  current = { id: current.id + 1, message, visible, tone }
   listeners.forEach((listener) => listener())
 }

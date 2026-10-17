@@ -1,7 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import { ChevronDown, LogIn } from 'lucide-react'
 import type { User } from '@/contracts/auth'
-import { UnavailableLink } from '@/shared/layout/unavailable-link'
 import { Button } from '@/shared/ui/button'
 import {
   DropdownMenu,
@@ -30,12 +29,21 @@ function UserMenu({ user }: UserMenuProps) {
           type="button"
           className="flex h-9 max-w-52 items-center gap-2 rounded-md border border-border px-2 text-sm outline-none transition-colors hover:border-primary focus-visible:ring-2 focus-visible:ring-ring"
         >
-          <span
-            aria-hidden="true"
-            className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground"
-          >
-            {initial}
-          </span>
+          {user.avatarUrl ? (
+            <img
+              src={user.avatarUrl}
+              alt=""
+              aria-hidden="true"
+              className="size-6 shrink-0 rounded-full object-cover"
+            />
+          ) : (
+            <span
+              aria-hidden="true"
+              className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-foreground"
+            >
+              {initial}
+            </span>
+          )}
           <span className="truncate">{user.name}</span>
           <ChevronDown className="size-4 shrink-0 text-muted-foreground" aria-hidden="true" />
           <span className="sr-only">Abrir menu da conta</span>
@@ -45,10 +53,10 @@ function UserMenu({ user }: UserMenuProps) {
         <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <UnavailableLink secao="meu-perfil">Meu perfil</UnavailableLink>
+          <Link to="/perfil">Meu perfil</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
-          <UnavailableLink secao="carteiras">Carteiras</UnavailableLink>
+          <Link to="/perfil/carteiras">Carteiras</Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem

@@ -18,16 +18,16 @@ export function RegisterForm({ returnTo }: RegisterFormProps) {
   const registerAccount = useRegister()
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerFormSchema),
-    defaultValues: { name: '', email: '', password: '', confirmPassword: '' },
+    defaultValues: { username: '', email: '', password: '', confirmPassword: '' },
   })
   const { errors, isSubmitting } = form.formState
 
-  const onSubmit = form.handleSubmit(async ({ name, email, password }) => {
+  const onSubmit = form.handleSubmit(async ({ username, email, password }) => {
     try {
-      await registerAccount.mutateAsync({ name, email, password })
+      await registerAccount.mutateAsync({ username, email, password })
       finishAuth(router, returnTo)
     } catch (error) {
-      applyApiError(form, error, ['name', 'email', 'password'])
+      applyApiError(form, error, ['username', 'email', 'password'])
     }
   })
 
@@ -38,8 +38,8 @@ export function RegisterForm({ returnTo }: RegisterFormProps) {
         autoComplete="username"
         placeholder="Nome de usuário"
         autoFocus
-        error={errors.name?.message}
-        {...form.register('name')}
+        error={errors.username?.message}
+        {...form.register('username')}
       />
       <AuthField
         label="E-mail"

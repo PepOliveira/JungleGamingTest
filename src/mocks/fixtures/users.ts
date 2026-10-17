@@ -11,8 +11,11 @@ export function createUsers(): UserRecord[] {
   return [
     {
       id: 'user_marina',
+      username: 'marina.duarte',
       name: 'Marina Duarte',
       email: first.email,
+      ensName: { name: 'marina', suffix: '.eth' },
+      walletNickname: 'Carteira da Marina',
       avatarUrl: null,
       createdAt: '2026-08-02T14:20:00.000Z',
       passwordSalt: 'salt_marina',
@@ -20,8 +23,11 @@ export function createUsers(): UserRecord[] {
     },
     {
       id: 'user_rafael',
+      username: 'rafael.lima',
       name: 'Rafael Lima',
       email: second.email,
+      ensName: null,
+      walletNickname: null,
       avatarUrl: null,
       createdAt: '2026-08-19T09:05:00.000Z',
       passwordSalt: 'salt_rafael',

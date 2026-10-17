@@ -9,19 +9,17 @@ import { authenticate, SESSION_TTL_MS } from '../utils/auth'
 import { errorResponse } from '../utils/errors'
 import { randomToken } from '../utils/ids'
 import { simulateLatency } from '../utils/latency'
+import { fieldFailure, validationFailure } from '../utils/validation'
 import { hashPassword, verifyPassword } from '../utils/password'
-
-const fieldMessages: Record<string, string> = {
-  name: 'Informe um nome de usuário com 2 a 80 caracteres',
-  email: 'Informe um e-mail válido',
-  password: 'A senha deve ter entre 8 e 72 caracteres',
-}
 
 function toUser(record: UserRecord): User {
   return {
     id: record.id,
+    username: record.username,
     name: record.name,
     email: record.email,
+    ensName: record.ensName,
+    walletNickname: record.walletNickname,
     avatarUrl: record.avatarUrl,
     createdAt: record.createdAt,
   }
@@ -34,15 +32,6 @@ function openSession(userId: string) {
     db.sessions[token] = { userId, expiresAt }
   })
   return { token, expiresAt }
-}
-
-function validationFailure(issues: readonly { path: PropertyKey[] }[]) {
-  const fieldErrors: Record<string, string[]> = {}
-  for (const issue of issues) {
-    const field = String(issue.path[0] ?? 'body')
-    fieldErrors[field] = [fieldMessages[field] ?? 'Valor inválido']
-  }
-  return errorResponse(422, 'validation_error', 'Verifique os campos informados', fieldErrors)
 }
 
 async function readJson(request: Request): Promise<unknown> {
@@ -62,20 +51,24 @@ export const authHandlers = [
       return validationFailure(parsed.error.issues)
     }
 
-    const { name, email, password } = parsed.data
+    const { username, email, password } = parsed.data
     const normalizedEmail = email.toLowerCase()
-    const taken = getDb().users.some((user) => user.email.toLowerCase() === normalizedEmail)
-    if (taken) {
-      return errorResponse(409, 'email_taken', 'Este e-mail já está cadastrado', {
-        email: ['Este e-mail já está cadastrado'],
-      })
+    const users = getDb().users
+    if (users.some((user) => user.email.toLowerCase() === normalizedEmail)) {
+      return fieldFailure(409, 'email_taken', 'email', 'Este e-mail já está cadastrado')
+    }
+    if (users.some((user) => user.username.toLowerCase() === username.toLowerCase())) {
+      return fieldFailure(409, 'username_taken', 'username', 'Este nome de usuário já está em uso')
     }
 
     const salt = randomToken(8)
     const record: UserRecord = {
       id: `user_${randomToken(6)}`,
-      name,
+      username,
+      name: username,
       email: normalizedEmail,
+      ensName: null,
+      walletNickname: null,
       avatarUrl: null,
       createdAt: new Date().toISOString(),
       passwordSalt: salt,

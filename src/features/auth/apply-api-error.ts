@@ -1,8 +1,8 @@
 import type { FieldValues, Path, UseFormReturn } from 'react-hook-form'
 import { toApiError } from '@/shared/api/api-error'
 
-export function applyApiError<TValues extends FieldValues>(
-  form: UseFormReturn<TValues>,
+export function applyApiError<TValues extends FieldValues, TOutput = TValues>(
+  form: UseFormReturn<TValues, unknown, TOutput>,
   error: unknown,
   fields: readonly Path<TValues>[],
 ) {

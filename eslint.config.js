@@ -7,7 +7,14 @@ import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
   {
-    ignores: ['dist', 'node_modules', 'playwright-report', 'test-results', 'src/routeTree.gen.ts'],
+    ignores: [
+      'dist',
+      'node_modules',
+      'playwright-report',
+      'test-results',
+      'src/routeTree.gen.ts',
+      'public/mockServiceWorker.js',
+    ],
   },
   {
     files: ['**/*.{ts,tsx}'],

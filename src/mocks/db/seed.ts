@@ -4,7 +4,7 @@ import { createUsers } from '../fixtures/users'
 import { createWallets } from '../fixtures/wallets'
 import type { MockDb } from './types'
 
-export const SCHEMA_VERSION = 5
+export const SCHEMA_VERSION = 6
 
 export function createSeedDb(): MockDb {
   return {
@@ -15,6 +15,8 @@ export function createSeedDb(): MockDb {
     carts: {},
     wallets: createWallets(),
     orders: [],
+    quotes: {},
+    connections: {},
     sessions: {},
     coupons: createCoupons(),
     idempotency: {},

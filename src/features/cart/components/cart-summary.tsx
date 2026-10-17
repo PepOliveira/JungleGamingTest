@@ -3,7 +3,6 @@ import type { Cart } from '@/contracts/cart'
 import { useSession } from '@/features/auth/use-session'
 import { stripAuthParams } from '@/features/auth/search'
 import { formatEth } from '@/shared/lib/eth'
-import { UnavailableLink } from '@/shared/layout/unavailable-link'
 import { Button } from '@/shared/ui/button'
 import { PromoCodeForm } from './promo-code-form'
 
@@ -74,13 +73,13 @@ export function CartSummary({ cart, hasBlockingItems }: CartSummaryProps) {
           size="lg"
           className="h-12 w-full rounded-full bg-gradient-to-b from-[#d28a4c] to-[#a8693a] text-base font-bold aria-disabled:pointer-events-none aria-disabled:opacity-50 lg:h-10 lg:rounded-sm lg:bg-primary lg:bg-none lg:text-sm"
         >
-          <UnavailableLink
-            secao="pagamento"
+          <Link
+            to="/pagamento"
             aria-disabled={empty || hasBlockingItems}
             tabIndex={empty || hasBlockingItems ? -1 : undefined}
           >
             Conectar e finalizar
-          </UnavailableLink>
+          </Link>
         </Button>
       ) : (
         <Button

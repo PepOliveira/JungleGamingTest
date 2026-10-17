@@ -19,7 +19,8 @@ const navLinkActiveClass = 'border-primary text-primary'
 
 export function SiteHeader({ cartCount, searchSlot, accountSlot }: SiteHeaderProps) {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
-  const onMarketPage = pathname.startsWith('/nfts/') || pathname === '/carrinho'
+  const onMarketPage =
+    pathname.startsWith('/nfts/') || pathname === '/carrinho' || pathname === '/pagamento'
 
   return (
     <header className="hidden border-b border-border md:block">

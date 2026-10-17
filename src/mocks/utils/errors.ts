@@ -6,7 +6,13 @@ export function errorResponse(
   code: ApiErrorCode,
   message: string,
   fieldErrors?: Record<string, string[]>,
+  details?: Record<string, unknown>,
 ) {
-  const body: ApiErrorBody = fieldErrors ? { code, message, fieldErrors } : { code, message }
+  const body: ApiErrorBody = {
+    code,
+    message,
+    ...(fieldErrors ? { fieldErrors } : {}),
+    ...(details ? { details } : {}),
+  }
   return HttpResponse.json(body, { status })
 }

@@ -40,6 +40,10 @@ export const endpoints = {
     avatar: '/profile/avatar',
     password: '/profile/password',
   },
+  walletConnections: {
+    create: '/wallet-connections',
+    detail: (id: string) => `/wallet-connections/${segment(id)}`,
+  },
   wallets: {
     list: '/wallets',
     create: '/wallets',

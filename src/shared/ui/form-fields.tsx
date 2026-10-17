@@ -254,3 +254,33 @@ export function EnsField({
     </FieldShell>
   )
 }
+
+type TextAreaFieldProps = Omit<ComponentProps<'textarea'>, 'id'> & {
+  label: string
+  error?: string
+  hint?: string
+  fieldClassName?: string
+}
+
+export function TextAreaField({
+  label,
+  error,
+  hint,
+  fieldClassName,
+  className,
+  ...props
+}: TextAreaFieldProps) {
+  const id = useId()
+
+  return (
+    <FieldShell id={id} label={label} error={error} hint={hint} className={fieldClassName}>
+      <textarea
+        id={id}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className={cn(controlClass, 'h-32 resize-y py-2', className)}
+        {...props}
+      />
+    </FieldShell>
+  )
+}

@@ -1,7 +1,8 @@
 import type { NftDetail } from '@/contracts/nft'
 import type { Order } from '@/contracts/order'
+import type { Quote } from '@/contracts/quote'
 import type { User } from '@/contracts/auth'
-import type { Wallet } from '@/contracts/wallet'
+import type { Wallet, WalletConnection } from '@/contracts/wallet'
 
 export type NftRecord = NftDetail & {
   listedAt: string
@@ -34,6 +35,22 @@ export type CartRecord = {
   version: number
 }
 
+export type OrderRecord = Order & {
+  userId: string
+  settleAt: string
+  outcome: 'confirmed' | 'declined'
+}
+
+export type QuoteRecord = {
+  userId: string
+  quote: Quote
+  signature: string
+}
+
+export type ConnectionRecord = WalletConnection & {
+  userId: string
+}
+
 export type SessionRecord = {
   userId: string
   expiresAt: string
@@ -51,7 +68,9 @@ export type MockDb = {
   favorites: Record<string, string[]>
   carts: Record<string, CartRecord>
   wallets: Record<string, Wallet[]>
-  orders: Order[]
+  orders: OrderRecord[]
+  quotes: Record<string, QuoteRecord>
+  connections: Record<string, ConnectionRecord>
   sessions: Record<string, SessionRecord>
   coupons: CouponRecord[]
   idempotency: Record<string, IdempotencyRecord>

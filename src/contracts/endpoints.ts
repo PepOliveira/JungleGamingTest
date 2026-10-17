@@ -1,4 +1,5 @@
 export const IDEMPOTENCY_HEADER = 'Idempotency-Key'
+export const GUEST_CART_HEADER = 'X-Guest-Cart'
 
 const segment = (value: string) => encodeURIComponent(value)
 

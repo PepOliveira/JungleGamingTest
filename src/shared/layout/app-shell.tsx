@@ -6,15 +6,22 @@ import { SiteFooter } from './site-footer'
 import { SiteHeader } from './site-header'
 
 type AppShellProps = {
+  cartCount: number
   headerSearch: ReactNode
   headerAccount: ReactNode
   mobileProfile: ReactNode
   overlays: ReactNode
 }
 
-export function AppShell({ headerSearch, headerAccount, mobileProfile, overlays }: AppShellProps) {
+export function AppShell({
+  cartCount,
+  headerSearch,
+  headerAccount,
+  mobileProfile,
+  overlays,
+}: AppShellProps) {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
-  const hideTabBar = pathname.startsWith('/nfts/')
+  const hideTabBar = pathname.startsWith('/nfts/') || pathname === '/carrinho'
 
   return (
     <div className="flex min-h-dvh flex-col">
@@ -24,7 +31,7 @@ export function AppShell({ headerSearch, headerAccount, mobileProfile, overlays 
       >
         Pular para o conteúdo
       </a>
-      <SiteHeader cartCount={0} searchSlot={headerSearch} accountSlot={headerAccount} />
+      <SiteHeader cartCount={cartCount} searchSlot={headerSearch} accountSlot={headerAccount} />
       <main id="conteudo" tabIndex={-1} className="flex-1 outline-none">
         <Outlet />
       </main>

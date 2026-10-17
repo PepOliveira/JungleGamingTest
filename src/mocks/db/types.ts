@@ -1,4 +1,3 @@
-import type { Cart } from '@/contracts/cart'
 import type { NftDetail } from '@/contracts/nft'
 import type { Order } from '@/contracts/order'
 import type { User } from '@/contracts/auth'
@@ -23,6 +22,18 @@ export type CouponRecord = {
   expiresAt: string
 }
 
+export type CartLineRecord = {
+  nftId: string
+  editionId: string
+  quantity: number
+}
+
+export type CartRecord = {
+  lines: CartLineRecord[]
+  couponCode: string | null
+  version: number
+}
+
 export type SessionRecord = {
   userId: string
   expiresAt: string
@@ -38,7 +49,7 @@ export type MockDb = {
   nfts: NftRecord[]
   users: UserRecord[]
   favorites: Record<string, string[]>
-  carts: Record<string, Cart>
+  carts: Record<string, CartRecord>
   wallets: Record<string, Wallet[]>
   orders: Order[]
   sessions: Record<string, SessionRecord>

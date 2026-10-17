@@ -2,6 +2,7 @@ import { endSession, resetPrivateData } from '@/features/auth/session-actions'
 import { SESSION_STORAGE_KEY, sessionStore } from '@/features/auth/session-store'
 import { stripAuthParams } from '@/features/auth/search'
 import { configureHttpClient } from '@/shared/api/http-client'
+import { mergeGuestCartIntoUser } from '@/features/cart/merge-guest-cart'
 import { announce } from '@/shared/lib/announcer'
 import { queryClient } from './query-client'
 import { router } from './router'
@@ -26,6 +27,10 @@ export function bootstrapApp() {
   configureHttpClient({
     getAccessToken: sessionStore.getAccessToken,
     onUnauthorized: handleUnauthorized,
+  })
+
+  sessionStore.onStart(() => {
+    void mergeGuestCartIntoUser(queryClient).catch(() => undefined)
   })
 
   window.addEventListener('storage', (event) => {

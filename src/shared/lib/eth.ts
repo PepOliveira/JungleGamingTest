@@ -87,3 +87,11 @@ export function ethFromCents(cents: number): EthAmount {
   }
   return toAmount(new EthDecimal(cents).dividedBy(100))
 }
+
+export function ethPercentage(amount: EthAmount, percent: string): EthAmount {
+  return toAmount(toDecimal(amount).times(new EthDecimal(percent)).dividedBy(100))
+}
+
+export function ethMin(a: EthAmount, b: EthAmount): EthAmount {
+  return ethCompare(a, b) <= 0 ? a : b
+}

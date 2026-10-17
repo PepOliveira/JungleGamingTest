@@ -19,7 +19,7 @@ export function LiveRegion() {
           key={id}
           aria-hidden="true"
           className={cn(
-            'toast pointer-events-none fixed bottom-24 left-1/2 z-[60] max-w-[90vw] -translate-x-1/2 rounded-md border bg-card px-4 py-3 text-sm shadow-lg lg:bottom-8',
+            'toast pointer-events-none fixed top-4 left-1/2 lg:top-20 z-[60] max-w-[90vw] -translate-x-1/2 rounded-md border bg-card px-4 py-3 text-sm  shadow-lg',
             tone === 'error' ? 'border-destructive/70' : 'border-border',
           )}
         >

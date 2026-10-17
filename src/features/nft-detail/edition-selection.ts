@@ -1,6 +1,7 @@
+import { MAX_QUANTITY_PER_ITEM } from '@/contracts/cart'
 import type { Edition } from '@/contracts/nft'
 
-export const MAX_QUANTITY_PER_ORDER = 10
+export const MAX_QUANTITY_PER_ORDER = MAX_QUANTITY_PER_ITEM
 
 export type EditionSelection = {
   edition: Edition | null

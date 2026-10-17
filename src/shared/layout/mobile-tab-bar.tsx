@@ -44,14 +44,14 @@ export function MobileTabBar({ profileSlot }: MobileTabBarProps) {
           <Heart className="size-5" fill="currentColor" aria-hidden="true" />
           <span className="sr-only">Favoritos</span>
         </UnavailableLink>
-        <UnavailableLink
-          secao="carrinho"
+        <Link
+          to="/carrinho"
           activeProps={{ className: tabActiveClass }}
           className={cn(tabClass, 'left-[72.7%]')}
         >
           <ShoppingCart className="size-[18px]" aria-hidden="true" />
           <span className="sr-only">Carrinho</span>
-        </UnavailableLink>
+        </Link>
         <div className="absolute top-[50px] left-[87.7%] -translate-x-1/2 -translate-y-1/2">
           {profileSlot}
         </div>

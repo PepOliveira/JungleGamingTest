@@ -2,6 +2,8 @@ import { z } from 'zod'
 import { ethAmountSchema, idSchema, isoDateSchema, versionSchema } from './common'
 import { orderStatusSchema } from './order'
 
+export const MOCK_SOCKET_URL = 'ws://realtime.kurio.mock'
+
 export const realtimeEventNames = {
   nftUpdated: 'nft.updated',
   orderUpdated: 'order.updated',

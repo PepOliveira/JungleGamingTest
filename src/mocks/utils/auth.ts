@@ -39,3 +39,10 @@ export function authenticate(request: Request): Authenticated | Rejected {
 
   return { user, token }
 }
+
+export function resolveSessionUserId(token: string | null): string | null {
+  if (!token) return null
+  const session = getDb().sessions[token]
+  if (!session || Date.parse(session.expiresAt) <= Date.now()) return null
+  return session.userId
+}

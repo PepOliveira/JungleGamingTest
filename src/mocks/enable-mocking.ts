@@ -1,5 +1,7 @@
 import { env } from '@/shared/config/env'
 import { resetDb } from './db/store'
+import { realtimeControls } from './realtime/controls'
+import type { RealtimeControls } from './realtime/controls'
 import { getScenario, setScenario } from './scenarios'
 import type { ScenarioName } from './scenarios'
 
@@ -7,6 +9,7 @@ export type MockControls = {
   reset: () => void
   getScenario: () => ScenarioName
   setScenario: (name: ScenarioName) => void
+  realtime: RealtimeControls
 }
 
 declare global {
@@ -27,5 +30,6 @@ export async function enableMocking() {
     reset: resetDb,
     getScenario: () => getScenario().name,
     setScenario,
+    realtime: realtimeControls,
   }
 }

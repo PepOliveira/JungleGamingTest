@@ -4,6 +4,7 @@ import { favoriteHandlers } from './favorites'
 import { nftHandlers } from './nfts'
 import { orderHandlers } from './orders'
 import { profileHandlers } from './profile'
+import { socketHandlers } from '../realtime/hub'
 import { quoteHandlers } from './quotes'
 import { walletConnectionHandlers } from './wallet-connections'
 import { walletHandlers } from './wallets'
@@ -18,4 +19,5 @@ export const handlers = [
   ...quoteHandlers,
   ...walletConnectionHandlers,
   ...walletHandlers,
+  ...socketHandlers,
 ]

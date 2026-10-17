@@ -1,12 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link, useNavigate, useRouter } from '@tanstack/react-router'
 import { ChevronLeft } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import type { Cart } from '@/contracts/cart'
 import { createOrderRequestSchema } from '@/contracts/order'
 import { quoteSchema } from '@/contracts/quote'
+import type { Quote } from '@/contracts/quote'
 import type { User } from '@/contracts/auth'
 import type { Wallet, WalletConnection, WalletProvider } from '@/contracts/wallet'
 import { useCart } from '@/features/cart/use-cart'
@@ -184,6 +185,19 @@ function CheckoutContent({ cart, profile, wallets }: CheckoutContentProps) {
   const replaceQuote = useReplaceQuote()
   const submit = useSubmitOrder()
   const quote = quoteQuery.data
+  const previousQuote = useRef<Quote | null>(null)
+
+  useEffect(() => {
+    const previous = previousQuote.current
+    previousQuote.current = quote ?? null
+    if (!previous || !quote || previous.id === quote.id || previous.network !== quote.network) {
+      return
+    }
+    const change = describeQuoteChange(previous, quote)
+    if (change.direction !== 'same') {
+      setQuoteChange(change)
+    }
+  }, [quote])
 
   const form = useForm<CollectorFormValues>({
     resolver: zodResolver(collectorSchema),
@@ -253,7 +267,6 @@ function CheckoutContent({ cart, profile, wallets }: CheckoutContentProps) {
       if (apiError.code === 'quote_outdated') {
         const next = quoteSchema.safeParse(apiError.details.quote)
         if (next.success) {
-          setQuoteChange(describeQuoteChange(quote, next.data))
           replaceQuote(next.data)
           announce('Os valores do pedido mudaram. Revise e confirme novamente.', {
             visible: true,
@@ -280,7 +293,8 @@ function CheckoutContent({ cart, profile, wallets }: CheckoutContentProps) {
       ? 'Confirmar com os novos valores'
       : 'Confirmar compra'
 
-  const canConfirm = Boolean(connection && quote) && !busy && !hasBlockingItems
+  const canConfirm =
+    Boolean(connection && quote) && !busy && !quoteQuery.isFetching && !hasBlockingItems
 
   return (
     <div className={containerClass}>

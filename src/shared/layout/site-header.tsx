@@ -19,7 +19,7 @@ const navLinkActiveClass = 'border-primary text-primary'
 
 export function SiteHeader({ cartCount, searchSlot, accountSlot }: SiteHeaderProps) {
   const pathname = useRouterState({ select: (state) => state.location.pathname })
-  const onMarketPage = pathname.startsWith('/nfts/')
+  const onMarketPage = pathname.startsWith('/nfts/') || pathname === '/carrinho'
 
   return (
     <header className="hidden border-b border-border md:block">
@@ -50,9 +50,9 @@ export function SiteHeader({ cartCount, searchSlot, accountSlot }: SiteHeaderPro
         </nav>
         <div className="flex items-center gap-4">
           {searchSlot}
-          <UnavailableLink
-            secao="carrinho"
-            aria-label={`Carrinho, ${cartCount} ${cartCount === 1 ? 'item' : 'itens'}`}
+          <Link
+            to="/carrinho"
+            aria-label={`Carrinho, ${cartCount} ${cartCount === 1 ? 'unidade' : 'unidades'}`}
             className="relative rounded-sm p-1 text-foreground transition-colors hover:text-primary"
           >
             <ShoppingCart className="size-5" aria-hidden="true" />
@@ -62,7 +62,7 @@ export function SiteHeader({ cartCount, searchSlot, accountSlot }: SiteHeaderPro
             >
               {cartCount}
             </span>
-          </UnavailableLink>
+          </Link>
           {accountSlot}
         </div>
       </div>

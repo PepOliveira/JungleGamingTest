@@ -4,7 +4,9 @@ import {
   ethCompare,
   ethEquals,
   ethIsZero,
+  ethMin,
   ethMultiply,
+  ethPercentage,
   ethFromCents,
   ethSub,
   ethToCents,
@@ -93,5 +95,18 @@ describe('eth cents conversion', () => {
     expect(ethFromCents(2)).toBe('0.02')
     expect(ethFromCents(1230)).toBe('12.3')
     expect(() => ethFromCents(1.5)).toThrow(RangeError)
+  })
+})
+
+describe('eth percentage and min', () => {
+  it('computes percentages without rounding noise', () => {
+    expect(ethPercentage('26.83', '10')).toBe('2.683')
+    expect(ethPercentage('0.3', '33.3333')).toBe('0.0999999')
+    expect(ethPercentage('1', '0')).toBe('0')
+  })
+
+  it('returns the smaller amount', () => {
+    expect(ethMin('0.05', '0.5')).toBe('0.05')
+    expect(ethMin('2', '1.999')).toBe('1.999')
   })
 })

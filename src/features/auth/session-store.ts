@@ -39,6 +39,7 @@ function writeStored(session: StoredSession | null) {
 let current: StoredSession | null = readStored()
 const listeners = new Set<Listener>()
 const endListeners = new Set<Listener>()
+const startListeners = new Set<Listener>()
 
 function emit() {
   listeners.forEach((listener) => listener())
@@ -56,9 +57,13 @@ export const sessionStore = {
     }
   },
   set(session: StoredSession) {
+    const changed = current?.accessToken !== session.accessToken
     current = session
     writeStored(session)
     emit()
+    if (changed) {
+      startListeners.forEach((listener) => listener())
+    }
   },
   clear() {
     const hadSession = current !== null
@@ -75,6 +80,12 @@ export const sessionStore = {
     emit()
     if (previous && !current) {
       endListeners.forEach((listener) => listener())
+    }
+  },
+  onStart(listener: Listener) {
+    startListeners.add(listener)
+    return () => {
+      startListeners.delete(listener)
     }
   },
   onEnd(listener: Listener) {

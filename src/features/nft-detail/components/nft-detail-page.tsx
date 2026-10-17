@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams, useRouter, useSearch } from '@tanstack/re
 import { ChevronLeft, ShoppingCart } from 'lucide-react'
 import { useState } from 'react'
 import type { NftDetail } from '@/contracts/nft'
+import { useAddToCart } from '@/features/cart/use-cart'
 import { FavoriteButton } from '@/features/favorites/components/favorite-button'
 import { toApiError } from '@/shared/api/api-error'
 import { ethMultiply, formatEthWithSymbol } from '@/shared/lib/eth'
@@ -73,6 +74,7 @@ function NftDetailContent({ nft }: NftDetailContentProps) {
   const { edicao } = useSearch({ from: '/nfts/$nftId' })
   const navigate = useNavigate({ from: '/nfts/$nftId' })
   const router = useRouter()
+  const routerNavigate = router.navigate
   const [requestedQuantity, setRequestedQuantity] = useState(1)
 
   const { edition, quantity, maxQuantity, soldOut } = resolveSelection(
@@ -84,6 +86,25 @@ function NftDetailContent({ nft }: NftDetailContentProps) {
   const unitPrice = edition?.price ?? nft.price
   const total = edition ? ethMultiply(edition.price, quantity) : null
   const showOriginalPrice = nft.originalPrice !== null && edition?.id === nft.defaultEditionId
+
+  const addToCart = useAddToCart()
+  const canAdd = Boolean(edition) && !soldOut && !addToCart.isPending
+
+  function addSelection(onAdded: () => void) {
+    if (!edition) return
+    addToCart.mutate(
+      { nftId: nft.id, editionId: edition.id, quantity, label: nft.name },
+      { onSuccess: onAdded },
+    )
+  }
+
+  function handleBuyNow() {
+    addSelection(() => void routerNavigate({ to: '/carrinho' }))
+  }
+
+  function handleAddOnly() {
+    addSelection(() => undefined)
+  }
 
   function selectEdition(editionId: string) {
     setRequestedQuantity(1)
@@ -180,8 +201,8 @@ function NftDetailContent({ nft }: NftDetailContentProps) {
               <div className="flex gap-3">
                 <Button
                   size="lg"
-                  disabled
-                  title="Disponível em uma próxima etapa"
+                  disabled={!canAdd}
+                  onClick={handleBuyNow}
                   className="h-10 px-8 font-bold uppercase"
                 >
                   Comprar
@@ -228,19 +249,20 @@ function NftDetailContent({ nft }: NftDetailContentProps) {
         <div className="mt-3 flex gap-3">
           <Button
             size="lg"
-            disabled
-            title="Disponível em uma próxima etapa"
+            disabled={!canAdd}
+            onClick={handleBuyNow}
             className="h-14 flex-1 rounded-full bg-gradient-to-b from-[#eaaa72] to-[#c98b55] text-base font-bold"
           >
             Comprar NFT
           </Button>
           <button
             type="button"
-            disabled
-            className="flex size-14 items-center justify-center rounded-full border border-border bg-background/40 opacity-60"
+            disabled={!canAdd}
+            onClick={handleAddOnly}
+            className="flex size-14 items-center justify-center rounded-full border border-border bg-background/40 outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-60"
           >
             <ShoppingCart className="size-5 text-primary" aria-hidden="true" />
-            <span className="sr-only">Adicionar ao carrinho (indisponível nesta etapa)</span>
+            <span className="sr-only">Adicionar ao carrinho</span>
           </button>
         </div>
       </div>

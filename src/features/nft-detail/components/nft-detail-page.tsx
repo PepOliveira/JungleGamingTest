@@ -1,8 +1,9 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link, useNavigate, useParams, useRouter, useSearch } from '@tanstack/react-router'
-import { ChevronLeft, Heart, ShoppingCart } from 'lucide-react'
+import { ChevronLeft, ShoppingCart } from 'lucide-react'
 import { useState } from 'react'
 import type { NftDetail } from '@/contracts/nft'
+import { FavoriteButton } from '@/features/favorites/components/favorite-button'
 import { toApiError } from '@/shared/api/api-error'
 import { ethMultiply, formatEthWithSymbol } from '@/shared/lib/eth'
 import { StatusPage } from '@/shared/layout/status-page'
@@ -127,14 +128,7 @@ function NftDetailContent({ nft }: NftDetailContentProps) {
             <ChevronLeft className="size-5" aria-hidden="true" />
             <span className="sr-only">Voltar</span>
           </button>
-          <button
-            type="button"
-            disabled
-            className="flex size-10 items-center justify-center rounded-full bg-card/80 opacity-60"
-          >
-            <Heart className="size-5" aria-hidden="true" />
-            <span className="sr-only">Favoritar (indisponível nesta etapa)</span>
-          </button>
+          <FavoriteButton nft={nft} className="size-10 rounded-full bg-card/80" />
         </div>
 
         <div className="grid lg:grid-cols-[minmax(0,560px)_minmax(0,1fr)] lg:gap-10">
@@ -192,16 +186,7 @@ function NftDetailContent({ nft }: NftDetailContentProps) {
                 >
                   Comprar
                 </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  disabled
-                  title="Disponível em uma próxima etapa"
-                  className="h-10 gap-2 border-primary px-4 text-primary"
-                >
-                  <Heart aria-hidden="true" />
-                  Favoritar
-                </Button>
+                <FavoriteButton nft={nft} variant="labeled" />
               </div>
             </div>
 

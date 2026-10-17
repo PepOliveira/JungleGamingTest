@@ -1,5 +1,6 @@
 import { Link } from '@tanstack/react-router'
 import type { NftSummary } from '@/contracts/nft'
+import { FavoriteButton } from '@/features/favorites/components/favorite-button'
 import { formatEthWithSymbol } from '@/shared/lib/eth'
 import { cn } from '@/shared/lib/utils'
 import { Skeleton } from '@/shared/ui/skeleton'
@@ -17,7 +18,7 @@ export function NftCard({ nft, priority = false, className }: NftCardProps) {
   const soldOut = nft.available === 0
 
   return (
-    <li className={cn('flex flex-col', className)}>
+    <li className={cn('relative flex flex-col', className)}>
       <Link
         to="/nfts/$nftId"
         params={{ nftId: nft.id }}
@@ -38,7 +39,7 @@ export function NftCard({ nft, priority = false, className }: NftCardProps) {
             </span>
           ) : null}
           {soldOut ? (
-            <span className="absolute top-6 right-6 rounded-sm bg-background/90 px-2 py-1 text-xs font-bold text-foreground">
+            <span className="absolute bottom-6 left-6 rounded-sm bg-background/90 px-2 py-1 text-xs font-bold text-foreground">
               ESGOTADO
             </span>
           ) : null}
@@ -56,6 +57,7 @@ export function NftCard({ nft, priority = false, className }: NftCardProps) {
           </p>
         </div>
       </Link>
+      <FavoriteButton nft={nft} className="absolute top-6 right-6" />
     </li>
   )
 }

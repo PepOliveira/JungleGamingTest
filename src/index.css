@@ -102,3 +102,40 @@
     animation: none;
   }
 }
+
+@keyframes toast-life {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 8px);
+  }
+  8%,
+  88% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+.toast {
+  animation: toast-life 5s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast {
+    animation-name: toast-life-static;
+  }
+
+  @keyframes toast-life-static {
+    0%,
+    90% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      visibility: hidden;
+    }
+  }
+}

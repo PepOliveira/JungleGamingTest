@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router'
 import { User } from 'lucide-react'
-import { UnavailableLink } from '@/shared/layout/unavailable-link'
 import { useSession } from '../use-session'
 
 const tabClass =
@@ -11,14 +10,10 @@ export function MobileProfileTab() {
 
   if (session.status === 'authenticated') {
     return (
-      <UnavailableLink
-        secao="perfil"
-        activeProps={{ className: 'text-primary' }}
-        className={tabClass}
-      >
+      <Link to="/perfil" activeProps={{ className: 'text-primary' }} className={tabClass}>
         <User className="size-[18px]" fill="currentColor" aria-hidden="true" />
         <span className="sr-only">Perfil</span>
-      </UnavailableLink>
+      </Link>
     )
   }
 

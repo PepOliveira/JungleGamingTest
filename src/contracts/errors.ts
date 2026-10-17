@@ -13,7 +13,8 @@ export const apiErrorCodeSchema = z.enum([
   'idempotency_conflict',
   'coupon_invalid',
   'coupon_expired',
-  'primary_wallet_conflict',
+  'wallet_conflict',
+  'username_taken',
   'transient_error',
   'internal_error',
 ])

@@ -39,6 +39,13 @@ describe('contracts', () => {
   it('validates wallet addresses per network', () => {
     const evm = {
       label: 'Principal',
+      holderName: 'Marina Duarte',
+      profileName: 'Marina Duarte',
+      alias: null,
+      provider: 'metamask',
+      referralCode: 'KURIO-1',
+      contactEmail: 'm@kurio.dev',
+      ensName: { name: 'marina', suffix: '.eth' },
       address: '0x52908400098527886E0F7030069857D2E4169EE7',
       network: 'ethereum',
       kind: 'primary',

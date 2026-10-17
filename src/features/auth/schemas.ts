@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { usernameSchema } from '@/contracts/auth'
 
 export const loginFormSchema = z.object({
   email: z.email('Informe um e-mail válido'),
@@ -8,11 +9,7 @@ export type LoginFormValues = z.infer<typeof loginFormSchema>
 
 export const registerFormSchema = z
   .object({
-    name: z
-      .string()
-      .trim()
-      .min(2, 'O nome de usuário deve ter ao menos 2 caracteres')
-      .max(80, 'O nome de usuário deve ter até 80 caracteres'),
+    username: usernameSchema,
     email: z.email('Informe um e-mail válido'),
     password: z
       .string()

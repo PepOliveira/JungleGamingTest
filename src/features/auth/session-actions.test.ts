@@ -7,7 +7,10 @@ import { sessionStore } from './session-store'
 const auth = {
   user: {
     id: 'user_1',
+    username: 'marina',
     name: 'Marina',
+    ensName: null,
+    walletNickname: null,
     email: 'm@kurio.dev',
     avatarUrl: null,
     createdAt: '2026-01-01T00:00:00.000Z',

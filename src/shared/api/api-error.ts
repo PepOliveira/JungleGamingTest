@@ -81,7 +81,8 @@ function kindFromCode(code: ApiErrorCode): ApiErrorKind | null {
     case 'availability_conflict':
     case 'quote_outdated':
     case 'idempotency_conflict':
-    case 'primary_wallet_conflict':
+    case 'wallet_conflict':
+    case 'username_taken':
       return 'conflict'
     case 'transient_error':
     case 'internal_error':

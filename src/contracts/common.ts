@@ -8,7 +8,9 @@ export const quantitySchema = z.number().int().min(1)
 export const versionSchema = z.number().int().nonnegative()
 export const isoDateSchema = z.iso.datetime({ offset: true })
 
-export const networkSchema = z.enum(['ethereum', 'polygon', 'solana'])
+export const networkSchema = z.enum(['ethereum', 'polygon', 'solana'], {
+  error: 'Selecione uma rede',
+})
 export type Network = z.infer<typeof networkSchema>
 
 export const imageSchema = z.object({

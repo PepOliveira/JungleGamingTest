@@ -77,11 +77,15 @@ describe('POST /auth/login', () => {
 })
 
 describe('POST /auth/register', () => {
-  const body = { name: 'Nova Pessoa', email: 'nova@kurio.dev', password: 'Kurio@789' }
+  const body = { username: 'nova.pessoa', email: 'nova@kurio.dev', password: 'Kurio@789' }
 
   it('creates the account and opens a session', async () => {
     const auth = await post(endpoints.auth.register, body)
-    expect(auth.user).toMatchObject({ name: 'Nova Pessoa', email: 'nova@kurio.dev' })
+    expect(auth.user).toMatchObject({
+      username: 'nova.pessoa',
+      name: 'nova.pessoa',
+      email: 'nova@kurio.dev',
+    })
     expect((await sessionWith(auth.accessToken)).user.id).toBe(auth.user.id)
   })
 
@@ -114,11 +118,11 @@ describe('POST /auth/register', () => {
 
   it('validates name, e-mail and password', async () => {
     const error = await failure(
-      post(endpoints.auth.register, { name: 'A', email: 'x', password: '1' }),
+      post(endpoints.auth.register, { username: 'A', email: 'x', password: '1' }),
     )
     expect(error.status).toBe(422)
     expect(Object.keys(error.fieldErrors)).toEqual(
-      expect.arrayContaining(['name', 'email', 'password']),
+      expect.arrayContaining(['username', 'email', 'password']),
     )
   })
 })

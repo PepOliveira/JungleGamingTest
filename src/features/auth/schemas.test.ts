@@ -25,7 +25,7 @@ describe('loginFormSchema', () => {
 
 describe('registerFormSchema', () => {
   const valid = {
-    name: 'Marina',
+    username: 'marina',
     email: 'm@kurio.dev',
     password: 'Kurio@123',
     confirmPassword: 'Kurio@123',
@@ -37,13 +37,13 @@ describe('registerFormSchema', () => {
 
   it('validates every field', () => {
     const result = registerFormSchema.safeParse({
-      name: ' a ',
+      username: ' a ',
       email: 'no',
       password: '123',
       confirmPassword: '',
     })
     expect(Object.keys(messages(result))).toEqual(
-      expect.arrayContaining(['name', 'email', 'password', 'confirmPassword']),
+      expect.arrayContaining(['username', 'email', 'password', 'confirmPassword']),
     )
   })
 

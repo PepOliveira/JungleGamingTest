@@ -21,6 +21,16 @@ async function waitForRealtime(page: Page, status: string) {
 }
 
 export const test = base.extend<Fixtures>({
+  page: async ({ page }, use) => {
+    if (process.env.E2E_BASE_URL) {
+      await page.addInitScript(() => {
+        if (!localStorage.getItem('kurio:mock-scenario')) {
+          localStorage.setItem('kurio:mock-scenario', 'instant')
+        }
+      })
+    }
+    await use(page)
+  },
   mocks: async ({ page }, use) => {
     await use(new Mocks(page))
   },

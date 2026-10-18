@@ -100,6 +100,7 @@ O servidor (nos mocks) fala Socket.IO v5 sobre WebSocket. O cliente (`features/r
 - **Liquidação de pedidos** acontece sob demanda (ao consultar) e também por temporizador quando há clientes conectados, publicando `order.updated` e `nft.updated` (estoque).
 - **Falhas injetáveis** (`faults`): um handler coringa, registrado primeiro, responde com status, erro de rede ou nunca responde (timeout). As regras são persistidas, então sobrevivem a recarregamentos.
 - **Inicialização:** o código dos mocks é um chunk separado, carregado como entrada paralela (`src/mocks/boot.ts`) e fora do bundle principal. O app renderiza imediatamente; requisições e a abertura do socket aguardam `whenRuntimeReady()`. Um detalhe importante: `engine.io-client` captura o `WebSocket` global ao ser importado, então `socket.io-client` precisa ser importado só depois de o MSW iniciar.
+- **Service worker reiniciado pelo navegador:** o navegador encerra o service worker depois de ~30 s ocioso e, ao reiniciá-lo, o MSW esquece quais abas estão ativas e deixa as chamadas passarem para o servidor estático (404). Por isso `src/mocks/worker-keepalive.ts` reenvia `MOCK_ACTIVATE` antes de cada requisição (`setRequestPreflight`, chamado por `whenRuntimeReady`) e mantém um batimento a cada 10 s. Há um teste E2E que derruba o worker pelo protocolo do DevTools (`e2e/mock-worker.spec.ts`).
 
 ## Acessibilidade
 
@@ -111,7 +112,7 @@ O servidor (nos mocks) fala Socket.IO v5 sobre WebSocket. O cliente (`features/r
 
 ## Desempenho
 
-- Rotas divididas automaticamente (`autoCodeSplitting`), diálogo de autenticação carregado sob demanda e mocks em chunk próprio; o bundle principal tem cerca de 344 KB (110 KB gzip).
+- Rotas divididas automaticamente (`autoCodeSplitting`), diálogo de autenticação carregado sob demanda e mocks em chunk próprio; o bundle principal tem cerca de 344 KB (110 KB gzip), e os chunks do runtime dos mocks são pré-carregados pelo HTML (`modulepreload`, injetado por um plugin em `vite.config.ts`) para baixarem em paralelo com o app.
 - Imagens em WebP com `srcset` de 320, 640 e 960 px e `sizes` por uso; a imagem principal tem `fetchpriority="high"` e não usa animação de entrada, para não atrasar o LCP.
 - Skeletons têm altura equivalente à do conteúdo final, evitando deslocamento de layout (CLS) e o "pulo" do rodapé.
 - Resultados e justificativas em [docs/lighthouse.md](docs/lighthouse.md).

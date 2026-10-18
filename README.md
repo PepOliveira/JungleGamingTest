@@ -2,7 +2,7 @@
 
 Front-end de um marketplace de NFTs em React + TypeScript. A API REST e o canal de tempo real (Socket.IO) são simulados no navegador com MSW, a partir dos mesmos contratos tipados usados pela aplicação.
 
-- Demo: _(URL pública do deploy — preencher após a publicação)_
+- Demo publicada: https://jungle-gaming-test-gamma.vercel.app (mocks e tempo real funcionando; login `colecionador@kurio.dev` / `Kurio@123`)
 - Arquitetura e decisões: [ARCHITECTURE.md](ARCHITECTURE.md)
 - Contratos REST e eventos: [docs/contracts.md](docs/contracts.md)
 - Resultados do Lighthouse: [docs/lighthouse.md](docs/lighthouse.md)
@@ -37,6 +37,8 @@ Abra `http://localhost:5173`. Nenhum backend é necessário: o MSW responde às 
 | `npm run e2e:ui`     | Playwright em modo interativo                                        |
 | `npm run e2e:report` | abre o relatório HTML do último run                                  |
 | `npm run lighthouse` | build, `vite preview` e Lighthouse (3 execuções, mediana) em `docs/` |
+
+Para rodar os E2E contra uma versão já publicada: `E2E_BASE_URL=https://jungle-gaming-test-gamma.vercel.app npx playwright test --project=desktop --project=mobile --grep-invert timeout` (os testes de timeout dependem de um timeout curto configurado só no servidor de testes). Para medir o Lighthouse na versão publicada: `LH_BASE_URL=https://jungle-gaming-test-gamma.vercel.app node scripts/lighthouse.mjs`.
 
 Cada teste E2E parte de um estado isolado (contexto novo do navegador, banco dos mocks recém-semeado). O relatório HTML fica em `playwright-report/` e os traces das falhas em `test-results/`. Os testes sobem o próprio servidor de desenvolvimento na porta 5174 (`E2E_PORT` para trocar). As baselines visuais ficam em `e2e/__screenshots__` e foram geradas no Windows; para atualizá-las use `npx playwright test --project=visual --update-snapshots`. No CI roda-se apenas `desktop` e `mobile`, porque a renderização de fontes difere entre sistemas.
 

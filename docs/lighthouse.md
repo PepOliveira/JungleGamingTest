@@ -42,6 +42,19 @@ Os mesmos dados, com data da execução, estão em `docs/lighthouse-results.json
 
 **Desktop atende às quatro metas. No mobile, Acessibilidade, Boas práticas e SEO atendem; Performance fica abaixo de 90** (71 e 74). CLS e TBT estão excelentes nos dois perfis; o que reprova o mobile é o LCP.
 
+## Ambiente publicado (Vercel)
+
+Medição feita na URL publicada, https://jungle-gaming-test-gamma.vercel.app, com CDN, HTTP/2 e Brotli, mesma configuração de perfis e 3 execuções por página e perfil (mediana). Relatórios completos em [`lighthouse-deployed/`](lighthouse-deployed/), tabela e metadados em [`lighthouse-deployed-results.md`](lighthouse-deployed-results.md) e [`lighthouse-deployed-results.json`](lighthouse-deployed-results.json).
+
+| Página  | Perfil  | Performance | Acessibilidade | Boas práticas | SEO | LCP     | CLS   | TBT   |
+| ------- | ------- | ----------- | -------------- | ------------- | --- | ------- | ----- | ----- |
+| home    | desktop | 100         | 98             | 100           | 100 | 616 ms  | 0.020 | 0 ms  |
+| detalhe | desktop | 100         | 100            | 100           | 100 | 630 ms  | 0.000 | 0 ms  |
+| home    | mobile  | **87**      | 100            | 100           | 100 | 3275 ms | 0.019 | 0 ms  |
+| detalhe | mobile  | **88**      | 100            | 100           | 100 | 3243 ms | 0.000 | 13 ms |
+
+**No ambiente publicado o desktop atende às quatro metas com folga (Performance 100). No mobile, Acessibilidade, Boas práticas e SEO atendem; Performance fica em 87 e 88, a poucos pontos da meta de 90.** O que separa o mobile da meta é o LCP (~3,2 s), pelo motivo descrito a seguir. A medição local (tabela anterior) tem números menores porque o servidor local não tem CDN nem HTTP/2.
+
 ## Por que o mobile não chega a 90
 
 A causa é estrutural e não um defeito de renderização. Como não há backend, o app só consegue buscar dados depois de:
@@ -51,20 +64,21 @@ A causa é estrutural e não um defeito de renderização. Como não há backend
 3. responder à API simulada;
 4. só então baixar e pintar a imagem do hero (o elemento de LCP).
 
-Sob 4G simulado e CPU 4× mais lenta, esses passos em série somam ~5 s até o LCP. Num backend real, os passos 2 e 3 não existiriam: o app consultaria a API diretamente. O desktop, sem a limitação de rede e de CPU, termina esse mesmo caminho em ~1,2 s.
+Sob 4G simulado e CPU 4× mais lenta, esses passos em série somam ~5 s até o LCP no servidor local e ~3,2 s na versão publicada (com CDN e HTTP/2). Num backend real, os passos 2 e 3 não existiriam: o app consultaria a API diretamente. O desktop, sem a limitação de rede e de CPU, termina esse mesmo caminho em ~1,2 s.
 
 ## O que já foi feito para melhorar
 
-| Mudança                                                                               | Efeito                                      |
-| ------------------------------------------------------------------------------------- | ------------------------------------------- |
-| Código dos mocks (MSW, banco, hashes) fora do bundle principal, como entrada paralela | bundle principal de 756 KB para 344 KB      |
-| App renderiza de imediato; requisições e socket aguardam os mocks                     | o shell não espera o MSW para aparecer      |
-| Diálogo de login e cadastro (React Hook Form) carregado sob demanda                   | −45 KB no bundle principal                  |
-| Skeletons de detalhe e carrinho com a altura do conteúdo final                        | CLS do detalhe de 0,202 para 0,000          |
-| Imagem principal sem animação de entrada e com `fetchpriority="high"`                 | menos atraso entre carregar e pintar        |
-| `srcset` limitado a 640 px nos slots pequenos                                         | menos bytes concorrendo com a imagem de LCP |
-| `meta description`, `robots.txt`, favicon e `theme-color`                             | SEO de 83 para 100                          |
-| Token `--destructive` mais claro                                                      | contraste ≥ 4,5:1 (axe sem violações)       |
+| Mudança                                                                                       | Efeito                                                                     |
+| --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| Código dos mocks (MSW, banco, hashes) fora do bundle principal, como entrada paralela         | bundle principal de 756 KB para 344 KB                                     |
+| App renderiza de imediato; requisições e socket aguardam os mocks                             | o shell não espera o MSW para aparecer                                     |
+| Diálogo de login e cadastro (React Hook Form) carregado sob demanda                           | −45 KB no bundle principal                                                 |
+| Skeletons de detalhe e carrinho com a altura do conteúdo final                                | CLS do detalhe de 0,202 para 0,000                                         |
+| Imagem principal sem animação de entrada e com `fetchpriority="high"`                         | menos atraso entre carregar e pintar                                       |
+| Chunks do runtime dos mocks pré-carregados pelo HTML (`modulepreload`), em paralelo com o app | remove um salto de rede em série; mobile publicado de 85 e 88 para 87 e 88 |
+| `srcset` limitado a 640 px nos slots pequenos                                                 | menos bytes concorrendo com a imagem de LCP                                |
+| `meta description`, `robots.txt`, favicon e `theme-color`                                     | SEO de 83 para 100                                                         |
+| Token `--destructive` mais claro                                                              | contraste ≥ 4,5:1 (axe sem violações)                                      |
 
 ## Próximos passos possíveis
 
